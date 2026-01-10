@@ -44,6 +44,11 @@ const studentSchema = new mongoose.Schema(
       type: String, // VD: "2021-2025"
       trim: true,
     },
+    deviceId: {
+      type: String,
+      trim: true,
+      sparse: true, // Cho phép null nhưng unique nếu có giá trị
+    },
     isActive: {
       type: Boolean,
       default: true,
