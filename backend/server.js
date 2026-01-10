@@ -40,14 +40,23 @@ app.set('io', io);
 
 // Routes
 app.get('/', (req, res) => {
-  res.json({ message: 'Attendance QR API Server is running!' });
+  res.json({ 
+    message: 'Attendance QR API Server is running!',
+    version: '1.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      events: '/api/events',
+      students: '/api/students',
+      attendances: '/api/attendances',
+    }
+  });
 });
 
-// API Routes (will be added)
-// app.use('/api/auth', require('./routes/auth'));
-// app.use('/api/events', require('./routes/events'));
-// app.use('/api/students', require('./routes/students'));
-// app.use('/api/attendances', require('./routes/attendances'));
+// API Routes
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/events', require('./routes/events'));
+app.use('/api/students', require('./routes/students'));
+app.use('/api/attendances', require('./routes/attendances'));
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {

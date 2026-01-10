@@ -12,3 +12,6 @@ yarn-error.log*
 .idea/
 coverage/
 .cache/
+
+# Claude Skills (local only)
+awesome-claude-skills-master/
