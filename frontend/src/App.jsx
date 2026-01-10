@@ -7,6 +7,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminLayout from './layouts/AdminLayout';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
+import EventsPage from './pages/EventsPage';
+import StudentsPage from './pages/StudentsPage';
+import QRDisplayPage from './pages/QRDisplayPage';
 
 /**
  * App Component - Router chính
@@ -31,11 +34,9 @@ function App() {
             >
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<DashboardPage />} />
-              
-              {/* Các route khác sẽ thêm sau */}
-              <Route path="events" element={<div>Events Page (Coming soon)</div>} />
-              <Route path="students" element={<div>Students Page (Coming soon)</div>} />
-              <Route path="qr-display" element={<div>QR Display Page (Coming soon)</div>} />
+              <Route path="events" element={<EventsPage />} />
+              <Route path="students" element={<StudentsPage />} />
+              <Route path="qr-display/:eventId" element={<QRDisplayPage />} />
             </Route>
 
             {/* 404 */}
