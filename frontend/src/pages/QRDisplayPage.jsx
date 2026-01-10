@@ -8,29 +8,37 @@ import socketService from '../services/socketService';
 import dayjs from 'dayjs';
 
 const QRDisplayPage = () => {
-  const { eventId } = useParams();
+  const { eventId, id } = useParams(); // Hỗ trợ cả :eventId và :id
+  const currentEventId = eventId || id;
   const [event, setEvent] = useState(null);
   const [qrData, setQrData] = useState(null);
   const [attendances, setAttendances] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [qrTimestamp, setQrTimestamp] = useState(Date.now());
 
   useEffect(() => {
     fetchEventData();
     setupSocket();
 
+    // Auto-refresh QR code mỗi 10 giây
+    const intervalId = setInterval(() => {
+      setQrTimestamp(Date.now());
+    }, 10000); // 10 giây
+
     return () => {
-      if (eventId) {
-        socketService.leaveEvent(eventId);
+      if (currentEventId) {
+        socketService.leaveEvent(currentEventId);
       }
+      clearInterval(intervalId);
     };
-  }, [eventId]);
+  }, [currentEventId]);
 
   const fetchEventData = async () => {
     try {
       setLoading(true);
       const [eventRes, attendanceRes] = await Promise.all([
-        eventService.getEventById(eventId),
-        eventService.getEventAttendances(eventId),
+        eventService.getEventById(currentEventId),
+        eventService.getEventAttendances(currentEventId),
       ]);
 
       setEvent(eventRes.data);
@@ -47,11 +55,11 @@ const QRDisplayPage = () => {
     const socket = socketService.connect();
 
     // Join event room
-    socketService.joinEvent(eventId);
+    socketService.joinEvent(currentEventId);
 
     // Lắng nghe check-in mới
     socketService.onNewCheckIn((data) => {
-      if (data.eventId === eventId) {
+      if (data.eventId === currentEventId) {
         setAttendances((prev) => [data.attendance, ...prev]);
         message.success(
           `${data.attendance.student.fullName} đã check-in thành công!`
@@ -61,7 +69,7 @@ const QRDisplayPage = () => {
 
     // Lắng nghe QR update
     socketService.onQRUpdated((data) => {
-      if (data.eventId === eventId) {
+      if (data.eventId === currentEventId) {
         setQrData({
           code: data.qrCode,
           expiresAt: data.expiresAt,
@@ -72,7 +80,7 @@ const QRDisplayPage = () => {
 
   const handleRefreshQR = async () => {
     try {
-      const response = await eventService.generateQRCode(eventId);
+      const response = await eventService.generateQRCode(currentEventId);
       setQrData(response.data);
       message.success('QR code đã được làm mới');
     } catch (error) {
@@ -156,7 +164,11 @@ const QRDisplayPage = () => {
               <div className="flex flex-col items-center">
                 <div className="bg-white p-4 rounded-lg shadow-lg">
                   <QRCodeSVG
-                    value={qrData.code}
+                    value={JSON.stringify({
+                      event_id: currentEventId,
+                      timestamp: qrTimestamp,
+                      code: qrData.code,
+                    })}
                     size={280}
                     level="H"
                     includeMargin={true}
@@ -165,6 +177,10 @@ const QRDisplayPage = () => {
                 
                 <p className="text-sm text-gray-500 mt-4">
                   Hết hạn: {dayjs(qrData.expiresAt).format('HH:mm:ss')}
+                </p>
+                
+                <p className="text-xs text-blue-600 mt-1">
+                  🔄 Tự động đổi mỗi 10 giây
                 </p>
 
                 <Button

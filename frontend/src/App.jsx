@@ -8,6 +8,7 @@ import AdminLayout from './layouts/AdminLayout';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import EventsPage from './pages/EventsPage';
+import CreateEventPage from './pages/CreateEventPage';
 import StudentsPage from './pages/StudentsPage';
 import QRDisplayPage from './pages/QRDisplayPage';
 
@@ -35,8 +36,10 @@ function App() {
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="events" element={<EventsPage />} />
+              <Route path="events/create" element={<CreateEventPage />} />
               <Route path="students" element={<StudentsPage />} />
               <Route path="qr-display/:eventId" element={<QRDisplayPage />} />
+              <Route path="checkin/:id" element={<QRDisplayPage />} />
             </Route>
 
             {/* 404 */}

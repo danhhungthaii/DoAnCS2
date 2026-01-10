@@ -50,9 +50,8 @@ const EventsPage = () => {
   };
 
   const handleCreate = () => {
-    setEditingEvent(null);
-    form.resetFields();
-    setModalVisible(true);
+    // Điều hướng đến trang CreateEvent thay vì mở modal
+    navigate('/events/create');
   };
 
   const handleEdit = (record) => {
