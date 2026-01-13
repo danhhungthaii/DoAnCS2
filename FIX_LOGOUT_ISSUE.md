@@ -13,43 +13,56 @@ The issue was caused by a **race condition** in the session management:
 5. The `isLoggedIn()` check would return `false`, causing the app to redirect back to the login screen
 
 ## Solution
-The fix involves three key changes:
+The fix involves three key changes with proper async/await patterns:
 
-### 1. PreferenceManager.kt - Ensure Data Persistence
+### 1. PreferenceManager.kt - Use Suspend Functions for DataStore
 ```kotlin
-fun saveStudent(student: Student, deviceId: String) {
-    runBlocking {
-        context.dataStore.edit { prefs ->
-            prefs[STUDENT_DATA] = gson.toJson(student)
-            prefs[DEVICE_ID] = deviceId
-            prefs[IS_LOGGED_IN] = "true"
-        }
-        // Đảm bảo dữ liệu đã được lưu vào disk
-        kotlinx.coroutines.delay(100)
+/**
+ * Lưu thông tin sinh viên (suspend function)
+ */
+suspend fun saveStudentAsync(student: Student, deviceId: String) {
+    context.dataStore.edit { prefs ->
+        prefs[STUDENT_DATA] = gson.toJson(student)
+        prefs[DEVICE_ID] = deviceId
+        prefs[IS_LOGGED_IN] = "true"
     }
 }
 ```
-- Added a 100ms delay after DataStore edit to ensure data is flushed to disk
+- Created new `saveStudentAsync()` suspend function
+- Uses native DataStore async/await pattern
+- No arbitrary delays - waits for actual completion
+- Legacy `saveStudent()` kept but deprecated for backward compatibility
 
-### 2. MainActivity.kt - Verify Session Before Navigation
+### 2. MainActivity.kt - Proper Async/Await Usage
 ```kotlin
-// Delay đủ lâu để đảm bảo DataStore hoàn tất việc lưu trữ
-kotlinx.coroutines.delay(1000)
-
-// Xác nhận lại session trước khi chuyển màn hình
-if (prefManager.isLoggedIn()) {
-    navigateToEventList()
-} else {
-    Toast.makeText(
-        this@MainActivity,
-        "Lỗi lưu phiên đăng nhập. Vui lòng thử lại.",
-        Toast.LENGTH_LONG
-    ).show()
-    resetLoginButton()
+if (student != null) {
+    // Lưu thông tin đăng nhập với async/await để đảm bảo hoàn tất
+    prefManager.saveStudentAsync(student, deviceId)
+    
+    // Xác nhận session đã được lưu
+    if (prefManager.isLoggedIn()) {
+        Toast.makeText(
+            this@MainActivity,
+            "Đăng nhập thành công! Chào ${student.fullName}",
+            Toast.LENGTH_SHORT
+        ).show()
+        
+        // Delay nhỏ để Toast hiển thị
+        kotlinx.coroutines.delay(500)
+        navigateToEventList()
+    } else {
+        Toast.makeText(
+            this@MainActivity,
+            "Lỗi lưu phiên đăng nhập. Vui lòng thử lại.",
+            Toast.LENGTH_LONG
+        ).show()
+        resetLoginButton()
+    }
 }
 ```
-- Increased delay from 500ms to 1000ms to allow DataStore to complete
-- Added verification check before navigation
+- Uses `saveStudentAsync()` with proper await
+- Reduced delay to 500ms (only for Toast display, not for DataStore sync)
+- Verifies session after async save completes
 - Added error handling if session save fails
 
 ### 3. EventListActivity.kt - Remove Premature Session Check
@@ -67,6 +80,23 @@ override fun onCreate(savedInstanceState: Bundle?) {
 ```
 - Removed the immediate `isLoggedIn()` check that was causing false negatives
 - Session validation now only happens in MainActivity before navigation
+
+## Benefits of This Approach
+
+### Reliability
+✅ **No race conditions** - DataStore operations complete before verification  
+✅ **Works on all devices** - Not dependent on device performance  
+✅ **Proper error handling** - User gets feedback if something goes wrong
+
+### Performance  
+✅ **Faster login** - 500ms instead of 1000ms delay  
+✅ **No blocking** - Uses suspend functions properly  
+✅ **No ANR risk** - Avoids runBlocking on main thread
+
+### Code Quality
+✅ **Follows best practices** - Uses DataStore's async API correctly  
+✅ **Maintainable** - Clear separation of concerns  
+✅ **Testable** - Suspend functions are easier to test
 
 ## Testing Instructions
 
@@ -87,12 +117,13 @@ override fun onCreate(savedInstanceState: Bundle?) {
 - ✅ User should stay logged in even after closing and reopening the app
 - ✅ No automatic logout should occur
 - ✅ Session should persist across app restarts
+- ✅ Login flow should be fast and smooth (< 1 second)
 
 ### Rollback Plan
 If issues persist:
 1. Check device logs: `adb logcat | grep attendance`
 2. Verify DataStore is working properly
-3. Consider increasing the delay values if on slower devices
+3. Can revert to legacy `saveStudent()` if needed (still available)
 4. Check for any exceptions in the logs
 
 ## Technical Details
@@ -102,23 +133,37 @@ If issues persist:
 - Type-safe and asynchronous
 - Better error handling
 - Uses Kotlin coroutines
+- Data consistency guarantees
 
-### Why the Delays?
-- DataStore operations are asynchronous by default
-- Even with `runBlocking`, there can be timing issues
-- The delays ensure data is fully persisted before reading
-- 100ms in PreferenceManager ensures disk flush
-- 1000ms in MainActivity ensures read consistency
+### Why Suspend Functions?
+- DataStore's `edit()` is already a suspend function
+- Using suspend functions allows proper async/await
+- No need for runBlocking which can cause ANR
+- Better integration with coroutines
+- More testable code
+
+### Why the 500ms Delay?
+- **NOT for DataStore sync** - async/await handles that
+- Only to allow Toast message to be visible before navigation
+- Improves user experience by showing success message
+- Can be removed if Toast not needed
 
 ### Alternative Solutions Considered
-1. **Suspend functions instead of runBlocking**: Would require major refactoring
-2. **SharedPreferences**: Works but deprecated in favor of DataStore
-3. **Callback-based verification**: More complex code structure
-4. **Event-based architecture**: Overkill for this simple use case
-
-The current solution is minimal, effective, and maintains code simplicity.
+1. ~~**Hardcoded delays (1000ms+)**: Unreliable, slow, poor UX~~ (initial approach)
+2. ~~**SharedPreferences**: Works but deprecated~~
+3. **Callback-based verification**: More complex
+4. **Event-based architecture**: Overkill for this case
+5. ✅ **Suspend functions with async/await**: Best practice (current solution)
 
 ## Related Files
 - `/android/app/src/main/java/com/attendance/MainActivity.kt`
 - `/android/app/src/main/java/com/attendance/EventListActivity.kt`
 - `/android/app/src/main/java/com/attendance/utils/PreferenceManager.kt`
+
+## Security Considerations
+- ✅ No sensitive data in logs
+- ✅ DataStore encrypts data at rest (on newer Android versions)
+- ✅ Device ID used for session validation
+- ✅ No token exposure in error messages
+- ✅ Session cleared properly on logout
+
