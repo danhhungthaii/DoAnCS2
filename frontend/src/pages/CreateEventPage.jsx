@@ -46,8 +46,10 @@ const CreateEventPage = () => {
   const handleMapClick = (lat, lng) => {
     setPosition({ latitude: lat, longitude: lng });
     form.setFieldsValue({
-      'location.latitude': lat,
-      'location.longitude': lng,
+      location: {
+        latitude: lat,
+        longitude: lng,
+      },
     });
     message.success(`Đã chọn vị trí: ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
   };
@@ -59,16 +61,20 @@ const CreateEventPage = () => {
     try {
       setLoading(true);
 
+      // Chuyển đổi dữ liệu theo đúng schema backend
       const eventData = {
         title: values.title,
         description: values.description,
         location: {
           address: values.address,
-          latitude: position.latitude,
-          longitude: position.longitude,
+          coordinates: {
+            latitude: values.location.latitude,
+            longitude: values.location.longitude,
+          },
         },
-        dateTime: values.dateTime.toISOString(),
-        endDateTime: values.endDateTime.toISOString(),
+        eventDate: values.dateTime.format('YYYY-MM-DD'), // Ngày sự kiện
+        startTime: values.dateTime.format('HH:mm'), // Giờ bắt đầu
+        endTime: values.endDateTime.format('HH:mm'), // Giờ kết thúc
         checkInRadius: values.checkInRadius,
       };
 
@@ -76,6 +82,7 @@ const CreateEventPage = () => {
       message.success('Tạo sự kiện thành công!');
       navigate('/events');
     } catch (error) {
+      console.error('Error creating event:', error);
       message.error(error.response?.data?.message || 'Không thể tạo sự kiện');
     } finally {
       setLoading(false);
@@ -94,8 +101,10 @@ const CreateEventPage = () => {
           const lng = pos.coords.longitude;
           setPosition({ latitude: lat, longitude: lng });
           form.setFieldsValue({
-            'location.latitude': lat,
-            'location.longitude': lng,
+            location: {
+              latitude: lat,
+              longitude: lng,
+            },
           });
           message.destroy();
           message.success('Đã lấy vị trí hiện tại thành công!');
@@ -131,8 +140,10 @@ const CreateEventPage = () => {
           onFinish={handleSubmit}
           initialValues={{
             checkInRadius: 50,
-            'location.latitude': position.latitude,
-            'location.longitude': position.longitude,
+            location: {
+              latitude: position.latitude,
+              longitude: position.longitude,
+            },
           }}
         >
           <Row gutter={24}>
@@ -216,7 +227,7 @@ const CreateEventPage = () => {
               </Row>
 
               <Form.Item
-                label="Bán kính check-in (mét)"
+                label="Bán kính check-in"
                 name="checkInRadius"
                 rules={[
                   { required: true, message: 'Vui lòng nhập bán kính' },
@@ -229,41 +240,39 @@ const CreateEventPage = () => {
                   style={{ width: '100%' }}
                   size="large"
                   placeholder="50"
-                  addonAfter="mét"
+                  suffix="mét"
                 />
               </Form.Item>
 
+              {/* Hidden fields cho latitude/longitude */}
               <Form.Item
-                label="Tọa độ (Latitude, Longitude)"
-                style={{ marginBottom: 8 }}
+                name={['location', 'latitude']}
+                hidden
+                rules={[{ required: true, message: 'Vui lòng chọn vị trí trên bản đồ' }]}
               >
-                <Input.Group compact>
-                  <Form.Item
-                    name={['location', 'latitude']}
-                    noStyle
-                    rules={[{ required: true, message: 'Latitude required' }]}
-                  >
-                    <Input
-                      style={{ width: '50%' }}
-                      placeholder="Latitude"
-                      readOnly
-                      value={position.latitude}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    name={['location', 'longitude']}
-                    noStyle
-                    rules={[{ required: true, message: 'Longitude required' }]}
-                  >
-                    <Input
-                      style={{ width: '50%' }}
-                      placeholder="Longitude"
-                      readOnly
-                      value={position.longitude}
-                    />
-                  </Form.Item>
-                </Input.Group>
+                <Input type="number" />
               </Form.Item>
+              
+              <Form.Item
+                name={['location', 'longitude']}
+                hidden
+                rules={[{ required: true, message: 'Vui lòng chọn vị trí trên bản đồ' }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+
+              {/* Hiển thị tọa độ đã chọn */}
+              <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                <p className="text-sm text-gray-600 mb-2">
+                  <EnvironmentOutlined /> Tọa độ đã chọn:
+                </p>
+                <p className="text-base font-mono font-semibold text-blue-600">
+                  {position.latitude.toFixed(6)}, {position.longitude.toFixed(6)}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  💡 Click vào bản đồ hoặc nhấn "Lấy vị trí hiện tại" để chọn
+                </p>
+              </div>
 
               <Button
                 type="dashed"

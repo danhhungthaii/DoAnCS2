@@ -40,4 +40,18 @@ export const studentService = {
       },
     });
   },
+
+  // Download template Excel
+  downloadTemplate: async () => {
+    return await api.get('/students/template', {
+      responseType: 'blob',
+    });
+  },
+
+  // Export danh sách sinh viên
+  exportStudents: async () => {
+    return await api.get('/students/export', {
+      responseType: 'blob',
+    });
+  },
 };

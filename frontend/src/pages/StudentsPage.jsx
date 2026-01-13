@@ -9,12 +9,16 @@ import {
   Space,
   Popconfirm,
   Tag,
+  Upload,
 } from 'antd';
 import {
   PlusOutlined,
   EditOutlined,
   DeleteOutlined,
   SearchOutlined,
+  UploadOutlined,
+  DownloadOutlined,
+  ExportOutlined,
 } from '@ant-design/icons';
 import { studentService } from '../services/studentService';
 
@@ -24,6 +28,7 @@ const StudentsPage = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editingStudent, setEditingStudent] = useState(null);
   const [searchText, setSearchText] = useState('');
+  const [uploading, setUploading] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -85,6 +90,90 @@ const StudentsPage = () => {
     } catch (error) {
       message.error(error.message || 'Có lỗi xảy ra');
     }
+  };
+
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await studentService.downloadTemplate();
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'template_students.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      message.success('Đã tải template thành công');
+    } catch (error) {
+      message.error('Không thể tải template');
+    }
+  };
+
+  const handleExport = async () => {
+    try {
+      const response = await studentService.exportStudents();
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      const filename = `students_${new Date().toISOString().split('T')[0]}.xlsx`;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      message.success('Đã export danh sách thành công');
+    } catch (error) {
+      message.error('Không thể export danh sách');
+    }
+  };
+
+  const uploadProps = {
+    name: 'file',
+    accept: '.xlsx,.xls,.csv',
+    showUploadList: false,
+    customRequest: async ({ file, onSuccess, onError }) => {
+      try {
+        setUploading(true);
+        const response = await studentService.importStudents(file);
+        
+        const { successCount, failedCount, duplicateCount, details } = response.data;
+        
+        Modal.info({
+          title: 'Kết quả import',
+          width: 600,
+          content: (
+            <div>
+              <p><strong>Tổng số:</strong> {successCount + failedCount + duplicateCount}</p>
+              <p style={{ color: 'green' }}><strong>Thành công:</strong> {successCount}</p>
+              {duplicateCount > 0 && (
+                <p style={{ color: 'orange' }}><strong>Trùng lặp:</strong> {duplicateCount}</p>
+              )}
+              {failedCount > 0 && (
+                <p style={{ color: 'red' }}><strong>Lỗi:</strong> {failedCount}</p>
+              )}
+              
+              {details.failed.length > 0 && (
+                <div style={{ marginTop: 16 }}>
+                  <strong>Chi tiết lỗi:</strong>
+                  <ul>
+                    {details.failed.slice(0, 5).map((item, idx) => (
+                      <li key={idx}>Dòng {item.row}: {item.error}</li>
+                    ))}
+                    {details.failed.length > 5 && <li>...và {details.failed.length - 5} lỗi khác</li>}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ),
+        });
+        
+        fetchStudents(searchText);
+        onSuccess();
+      } catch (error) {
+        message.error(error.message || 'Import thất bại');
+        onError(error);
+      } finally {
+        setUploading(false);
+      }
+    },
   };
 
   const columns = [
@@ -172,6 +261,26 @@ const StudentsPage = () => {
             style={{ width: 300 }}
             enterButton={<SearchOutlined />}
           />
+          <Button
+            icon={<DownloadOutlined />}
+            onClick={handleDownloadTemplate}
+          >
+            Tải template
+          </Button>
+          <Upload {...uploadProps}>
+            <Button
+              icon={<UploadOutlined />}
+              loading={uploading}
+            >
+              Import Excel
+            </Button>
+          </Upload>
+          <Button
+            icon={<ExportOutlined />}
+            onClick={handleExport}
+          >
+            Export Excel
+          </Button>
           <Button
             type="primary"
             icon={<PlusOutlined />}

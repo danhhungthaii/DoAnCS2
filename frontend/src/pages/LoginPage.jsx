@@ -27,8 +27,22 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-      <Card className="w-full max-w-md shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+      {/* Background Image với blur */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(/images/dnc-building.jpg)',
+          filter: 'blur(8px)',
+          transform: 'scale(1.1)',
+        }}
+      />
+      
+      {/* Overlay trắng để tăng độ sáng */}
+      <div className="absolute inset-0 bg-white bg-opacity-60" />
+
+      {/* Content */}
+      <Card className="relative z-10 shadow-2xl backdrop-blur-sm bg-white/95">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             Hệ thống Điểm danh QR

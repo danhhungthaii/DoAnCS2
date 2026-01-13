@@ -14,22 +14,15 @@ const QRDisplayPage = () => {
   const [qrData, setQrData] = useState(null);
   const [attendances, setAttendances] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [qrTimestamp, setQrTimestamp] = useState(Date.now());
 
   useEffect(() => {
     fetchEventData();
     setupSocket();
 
-    // Auto-refresh QR code mỗi 10 giây
-    const intervalId = setInterval(() => {
-      setQrTimestamp(Date.now());
-    }, 10000); // 10 giây
-
     return () => {
       if (currentEventId) {
         socketService.leaveEvent(currentEventId);
       }
-      clearInterval(intervalId);
     };
   }, [currentEventId]);
 
@@ -166,7 +159,6 @@ const QRDisplayPage = () => {
                   <QRCodeSVG
                     value={JSON.stringify({
                       event_id: currentEventId,
-                      timestamp: qrTimestamp,
                       code: qrData.code,
                     })}
                     size={280}
@@ -175,12 +167,12 @@ const QRDisplayPage = () => {
                   />
                 </div>
                 
-                <p className="text-sm text-gray-500 mt-4">
-                  Hết hạn: {dayjs(qrData.expiresAt).format('HH:mm:ss')}
+                <p className="text-sm text-gray-600 mt-4 font-medium">
+                  Mã QR cố định cho sự kiện
                 </p>
                 
-                <p className="text-xs text-blue-600 mt-1">
-                  🔄 Tự động đổi mỗi 10 giây
+                <p className="text-xs text-green-600 mt-1">
+                  ✅ Có hiệu lực trong suốt sự kiện
                 </p>
 
                 <Button
@@ -189,7 +181,7 @@ const QRDisplayPage = () => {
                   onClick={handleRefreshQR}
                   className="mt-4"
                 >
-                  Làm mới QR
+                  Tải lại
                 </Button>
               </div>
             ) : (
@@ -208,7 +200,7 @@ const QRDisplayPage = () => {
                 title="Tổng check-in"
                 value={attendances.length}
                 prefix={<CheckCircleOutlined />}
-                valueStyle={{ color: '#3f8600' }}
+                styles={{ value: { color: '#3f8600' } }}
               />
             </Card>
 
@@ -216,7 +208,7 @@ const QRDisplayPage = () => {
               <Statistic
                 title="Hợp lệ"
                 value={attendances.filter((a) => a.isValid).length}
-                valueStyle={{ color: '#1890ff' }}
+                styles={{ value: { color: '#1890ff' } }}
               />
             </Card>
 
@@ -224,7 +216,7 @@ const QRDisplayPage = () => {
               <Statistic
                 title="Ngoài vùng"
                 value={attendances.filter((a) => !a.isValid).length}
-                valueStyle={{ color: '#faad14' }}
+                styles={{ value: { color: '#faad14' } }}
               />
             </Card>
           </div>

@@ -77,19 +77,19 @@ exports.createEvent = async (req, res) => {
       createdBy: req.user._id,
     };
 
-    // Tạo QR code cho sự kiện
-    const qrData = await generateEventQRCode('temp-id');
+    // Tạo QR code cố định cho sự kiện (không expire)
+    const qrData = await generateEventQRCode('temp-id', true);
 
     const event = await Event.create({
       ...eventData,
       qrCode: {
         code: qrData.code,
-        expiresAt: qrData.expiresAt,
+        expiresAt: qrData.expiresAt, // null - không hết hạn
       },
     });
 
     // Cập nhật QR code với eventId thật
-    const updatedQR = await generateEventQRCode(event._id.toString());
+    const updatedQR = await generateEventQRCode(event._id.toString(), true);
     event.qrCode.code = updatedQR.code;
     await event.save();
 

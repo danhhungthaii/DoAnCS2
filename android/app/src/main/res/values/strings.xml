@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Điểm danh QR</string>
+    
+    <!-- Login Screen -->
+    <string name="login_title">Đăng nhập</string>
+    <string name="student_code_hint">Mã sinh viên</string>
+    <string name="login_button">Đăng nhập</string>
+    <string name="login_error">Đăng nhập thất bại</string>
+    <string name="student_not_found">Không tìm thấy sinh viên</string>
+    
+    <!-- Event List -->
+    <string name="welcome">Xin chào, %s</string>
+    <string name="events_title">Danh sách sự kiện</string>
+    <string name="no_events">Không có sự kiện nào</string>
+    <string name="refresh_events">Làm mới danh sách</string>
+    <string name="logout">Đăng xuất</string>
+    
+    <!-- Event Status -->
+    <string name="status_upcoming">Sắp diễn ra</string>
+    <string name="status_ongoing">Đang diễn ra</string>
+    <string name="status_completed">Đã kết thúc</string>
+    
+    <!-- Scan QR -->
+    <string name="scan_instruction">Hướng camera vào mã QR</string>
+    <string name="scanning">Đang quét...</string>
+    <string name="qr_detected">Đã phát hiện mã QR</string>
+    <string name="getting_location">Đang lấy vị trí GPS...</string>
+    
+    <!-- Check-in -->
+    <string name="check_in_success">Điểm danh thành công!</string>
+    <string name="check_in_warning">Bạn đang ở ngoài phạm vi sự kiện</string>
+    <string name="check_in_error">Điểm danh thất bại</string>
+    <string name="check_in_processing">Đang xử lý...</string>
+    <string name="distance_format">Khoảng cách: %.2f mét</string>
+    <string name="done_button">Hoàn tất</string>
+    
+    <!-- Error Messages -->
+    <string name="error_network">Lỗi kết nối mạng</string>
+    <string name="error_camera">Không thể truy cập camera</string>
+    <string name="error_location">Không thể lấy vị trí GPS</string>
+    <string name="error_qr_invalid">Mã QR không hợp lệ</string>
+    <string name="error_permission">Vui lòng cấp quyền để tiếp tục</string>
+    
+    <!-- Permissions -->
+    <string name="permission_camera_required">Cần quyền truy cập camera để quét mã QR</string>
+    <string name="permission_location_required">Cần quyền truy cập vị trí để xác nhận điểm danh</string>
+</resources>

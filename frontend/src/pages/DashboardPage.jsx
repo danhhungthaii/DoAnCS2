@@ -31,7 +31,7 @@ const DashboardPage = () => {
               title="Tổng Sự kiện"
               value={stats.totalEvents}
               prefix={<CalendarOutlined />}
-              valueStyle={{ color: '#1890ff' }}
+              styles={{ value: { color: '#1890ff' } }}
             />
           </Card>
         </Col>
@@ -42,7 +42,7 @@ const DashboardPage = () => {
               title="Tổng Sinh viên"
               value={stats.totalStudents}
               prefix={<UserOutlined />}
-              valueStyle={{ color: '#52c41a' }}
+              styles={{ value: { color: '#52c41a' } }}
             />
           </Card>
         </Col>
@@ -53,7 +53,7 @@ const DashboardPage = () => {
               title="Điểm danh Hôm nay"
               value={stats.todayAttendance}
               prefix={<CheckCircleOutlined />}
-              valueStyle={{ color: '#faad14' }}
+              styles={{ value: { color: '#faad14' } }}
             />
           </Card>
         </Col>
@@ -64,7 +64,7 @@ const DashboardPage = () => {
               title="Sự kiện Sắp tới"
               value={stats.upcomingEvents}
               prefix={<ClockCircleOutlined />}
-              valueStyle={{ color: '#f5222d' }}
+              styles={{ value: { color: '#f5222d' } }}
             />
           </Card>
         </Col>

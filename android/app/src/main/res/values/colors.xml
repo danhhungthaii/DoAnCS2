@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors -->
+    <color name="primary">#1890FF</color>
+    <color name="primary_dark">#096DD9</color>
+    <color name="primary_light">#40A9FF</color>
+    <color name="accent">#52C41A</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#262626</color>
+    <color name="text_secondary">#8C8C8C</color>
+    <color name="text_disabled">#BFBFBF</color>
+    
+    <!-- Status Colors -->
+    <color name="status_success">#52C41A</color>
+    <color name="status_warning">#FA8C16</color>
+    <color name="status_error">#F5222D</color>
+    <color name="status_ongoing">#1890FF</color>
+    <color name="status_upcoming">#722ED1</color>
+    <color name="status_completed">#8C8C8C</color>
+    
+    <!-- Launcher Icon -->
+    <color name="ic_launcher_background">#1890FF</color>
+
+
+    <!-- Background Colors -->
+    <color name="background">#F0F2F5</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="divider">#E8E8E8</color>
+    
+    <!-- Transparent Colors -->
+    <color name="overlay">#80000000</color>
+    <color name="scan_border">#FFFFFF</color>
+</resources>
