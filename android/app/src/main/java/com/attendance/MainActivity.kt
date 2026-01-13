@@ -93,9 +93,20 @@ class MainActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                         
-                        // Delay nhỏ trước khi chuyển màn hình
-                        kotlinx.coroutines.delay(500)
-                        navigateToEventList()
+                        // Delay đủ lâu để đảm bảo DataStore hoàn tất việc lưu trữ
+                        kotlinx.coroutines.delay(1000)
+                        
+                        // Xác nhận lại session trước khi chuyển màn hình
+                        if (prefManager.isLoggedIn()) {
+                            navigateToEventList()
+                        } else {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Lỗi lưu phiên đăng nhập. Vui lòng thử lại.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            resetLoginButton()
+                        }
                     } else {
                         Toast.makeText(
                             this@MainActivity,

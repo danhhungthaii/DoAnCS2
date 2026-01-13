@@ -37,6 +37,8 @@ class PreferenceManager(private val context: Context) {
                 prefs[DEVICE_ID] = deviceId
                 prefs[IS_LOGGED_IN] = "true"
             }
+            // Đảm bảo dữ liệu đã được lưu vào disk
+            kotlinx.coroutines.delay(100)
         }
     }
     
