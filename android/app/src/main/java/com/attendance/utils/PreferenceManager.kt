@@ -28,8 +28,20 @@ class PreferenceManager(private val context: Context) {
     private val gson = Gson()
     
     /**
-     * Lưu thông tin sinh viên
+     * Lưu thông tin sinh viên (suspend function)
      */
+    suspend fun saveStudentAsync(student: Student, deviceId: String) {
+        context.dataStore.edit { prefs ->
+            prefs[STUDENT_DATA] = gson.toJson(student)
+            prefs[DEVICE_ID] = deviceId
+            prefs[IS_LOGGED_IN] = "true"
+        }
+    }
+    
+    /**
+     * Lưu thông tin sinh viên (legacy synchronous - deprecated)
+     */
+    @Deprecated("Use saveStudentAsync instead")
     fun saveStudent(student: Student, deviceId: String) {
         runBlocking {
             context.dataStore.edit { prefs ->

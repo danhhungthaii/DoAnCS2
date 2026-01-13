@@ -35,13 +35,8 @@ class EventListActivity : AppCompatActivity() {
 
             prefManager = PreferenceManager(this)
 
-            // Kiểm tra xem người dùng đã đăng nhập chưa
-            if (!prefManager.isLoggedIn()) {
-                Toast.makeText(this, "Vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show()
-                navigateToLogin()
-                return
-            }
-
+            // Setup UI và load events
+            // Session check đã được thực hiện ở MainActivity
             setupUI()
             loadEvents()
         } catch (e: Exception) {

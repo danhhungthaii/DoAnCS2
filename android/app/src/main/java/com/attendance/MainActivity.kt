@@ -84,18 +84,28 @@ class MainActivity : AppCompatActivity() {
                     }
                     
                     if (student != null) {
-                        // Lưu thông tin đăng nhập
-                        prefManager.saveStudent(student, deviceId)
+                        // Lưu thông tin đăng nhập với async/await để đảm bảo hoàn tất
+                        prefManager.saveStudentAsync(student, deviceId)
                         
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Đăng nhập thành công! Chào ${student.fullName}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        
-                        // Delay nhỏ trước khi chuyển màn hình
-                        kotlinx.coroutines.delay(500)
-                        navigateToEventList()
+                        // Xác nhận session đã được lưu
+                        if (prefManager.isLoggedIn()) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Đăng nhập thành công! Chào ${student.fullName}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            
+                            // Delay nhỏ để Toast hiển thị
+                            kotlinx.coroutines.delay(500)
+                            navigateToEventList()
+                        } else {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Lỗi lưu phiên đăng nhập. Vui lòng thử lại.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            resetLoginButton()
+                        }
                     } else {
                         Toast.makeText(
                             this@MainActivity,
