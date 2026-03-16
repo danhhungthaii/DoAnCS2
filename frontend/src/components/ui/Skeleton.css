@@ -1,0 +1,167 @@
+/* ========================================
+   SKELETON COMPONENT
+   ======================================== */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface) 25%,
+    var(--surface-hover) 50%,
+    var(--surface) 75%
+  );
+  border-radius: var(--radius-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-animate {
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* ========================================
+   VARIANTS
+   ======================================== */
+
+/* Text line */
+.skeleton-text {
+  width: 100%;
+  height: 1em;
+  border-radius: var(--radius-sm);
+}
+
+/* Title/heading */
+.skeleton-title {
+  width: 60%;
+  height: 1.5em;
+  border-radius: var(--radius-md);
+}
+
+/* Avatar/profile picture */
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* Thumbnail/image */
+.skeleton-thumbnail {
+  width: 100%;
+  height: 200px;
+  border-radius: var(--radius-lg);
+}
+
+/* Custom rectangle */
+.skeleton-rectangle {
+  width: 100%;
+  height: 100px;
+  border-radius: var(--radius-md);
+}
+
+/* ========================================
+   SKELETON GROUP (Multiple lines)
+   ======================================== */
+
+.skeleton-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ========================================
+   COMMON PATTERNS
+   ======================================== */
+
+/* Card skeleton */
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+}
+
+/* User info skeleton */
+.skeleton-user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.skeleton-user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    var(--surface) 25%,
+    var(--surface-hover) 50%,
+    var(--surface) 75%
+  );
+  flex-shrink: 0;
+}
+
+.skeleton-user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* List item skeleton */
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.skeleton-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* Table row skeleton */
+.skeleton-table-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--surface-border);
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-animate {
+    animation: none;
+    background: var(--surface);
+  }
+}
+
+/* Screen reader text */
+.skeleton[aria-busy="true"]::before {
+  content: "Loading...";
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

@@ -2,6 +2,7 @@ package com.attendance
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -26,39 +27,95 @@ class EventListActivity : AppCompatActivity() {
     private lateinit var prefManager: PreferenceManager
     private lateinit var eventAdapter: EventAdapter
     
+    companion object {
+        private const val TAG = "EventListActivity"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate: Starting EventListActivity")
 
         try {
             binding = ActivityEventListBinding.inflate(layoutInflater)
             setContentView(binding.root)
+            Log.d(TAG, "onCreate: View binding created successfully")
 
-            prefManager = PreferenceManager(this)
+            prefManager = PreferenceManager.getInstance(this)
+
+            // Load token
+            val savedToken = prefManager.getAuthToken()
+            if (savedToken != null) {
+                Log.d(TAG, "onCreate: Loading saved token")
+                RetrofitClient.setAuthToken(savedToken)
+            } else {
+                Log.w(TAG, "onCreate: No token found")
+            }
 
             // Kiểm tra xem người dùng đã đăng nhập chưa
-            if (!prefManager.isLoggedIn()) {
+            val isLoggedIn = prefManager.isLoggedIn()
+            Log.d(TAG, "onCreate: isLoggedIn = $isLoggedIn")
+
+            if (!isLoggedIn) {
+                Log.w(TAG, "onCreate: User not logged in, redirecting to login")
                 Toast.makeText(this, "Vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show()
                 navigateToLogin()
                 return
             }
 
+            // Kiểm tra xem có thông tin sinh viên không
+            val student = prefManager.getStudent()
+            Log.d(TAG, "onCreate: Student = ${student?.fullName ?: "null"}")
+
+            if (student == null) {
+                Log.e(TAG, "onCreate: Student data is null despite being logged in!")
+                Toast.makeText(
+                    this,
+                    "Không tìm thấy thông tin sinh viên. Vui lòng đăng nhập lại",
+                    Toast.LENGTH_LONG
+                ).show()
+                prefManager.clearSession()
+                navigateToLogin()
+                return
+            }
+
+            Log.d(TAG, "onCreate: Setting up UI")
             setupUI()
+            
+            // Check if we need to filter by status (from HomeFragment)
+            val filterStatus = intent.getStringExtra("FILTER_STATUS")
+            if (filterStatus != null) {
+                val tabIndex = when (filterStatus) {
+                    "ongoing" -> 0
+                    "upcoming" -> 1
+                    "completed" -> 2
+                    else -> 0
+                }
+                binding.tabLayout.getTabAt(tabIndex)?.select()
+            }
+            
+            Log.d(TAG, "onCreate: Loading events")
             loadEvents()
         } catch (e: Exception) {
+            Log.e(TAG, "onCreate: Exception occurred", e)
             Toast.makeText(this, "Lỗi khởi tạo: ${e.message}", Toast.LENGTH_LONG).show()
             e.printStackTrace()
+            prefManager.clearSession()
             navigateToLogin()
         }
     }
 
     private fun navigateToLogin() {
-        startActivity(Intent(this, MainActivity::class.java))
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
         finish()
     }
     
     private fun setupUI() {
         try {
             val student = prefManager.getStudent()
+            Log.d(TAG, "setupUI: Setting welcome text for ${student?.fullName}")
+
             binding.tvWelcome.text = "Xin chào, ${student?.fullName ?: "Sinh viên"}"
             binding.tvStudentCode.text = "MSSV: ${student?.studentCode ?: "N/A"}"
 
@@ -74,30 +131,58 @@ class EventListActivity : AppCompatActivity() {
                 adapter = eventAdapter
             }
 
+            // Setup Tabs
+            setupTabs()
+
             // Refresh
             binding.swipeRefresh.setOnRefreshListener {
                 loadEvents()
             }
+
+            Log.d(TAG, "setupUI: UI setup completed successfully")
         } catch (e: Exception) {
+            Log.e(TAG, "setupUI: Exception occurred", e)
             Toast.makeText(this, "Lỗi khởi tạo giao diện: ${e.message}", Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
+    }
+
+    private fun setupTabs() {
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Đang diễn ra"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Sắp diễn ra"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Đã kết thúc"))
+
+        binding.tabLayout.addOnTabSelectedListener(object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab?) {
+                loadEvents()
+            }
+            override fun onTabUnselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
+            override fun onTabReselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
+        })
     }
     
     private fun loadEvents() {
         binding.swipeRefresh.isRefreshing = true
         binding.progressBar.visibility = View.VISIBLE
         
+        // Map tab index to status
+        val status = when (binding.tabLayout.selectedTabPosition) {
+            0 -> "ongoing"
+            1 -> "upcoming"
+            2 -> "completed"
+            else -> "ongoing"
+        }
+
         lifecycleScope.launch {
             try {
-                // Lấy sự kiện đang diễn ra và sắp tới
-                val response = RetrofitClient.apiService.getEvents(status = null)
+                val response = RetrofitClient.apiService.getEvents(status = status)
                 
                 if (response.isSuccessful && response.body()?.success == true) {
                     val events = response.body()?.data ?: emptyList()
                     
                     if (events.isEmpty()) {
                         binding.tvEmptyState.visibility = View.VISIBLE
+                        binding.tvEmptyState.text = "Không có sự kiện nào"
                         binding.rvEvents.visibility = View.GONE
                     } else {
                         binding.tvEmptyState.visibility = View.GONE
@@ -126,13 +211,10 @@ class EventListActivity : AppCompatActivity() {
     }
     
     private fun onEventClick(event: Event) {
-        // Chuyển sang màn hình scan QR
-        val intent = Intent(this, ScanQRActivity::class.java).apply {
-            putExtra("EVENT_ID", event.id)
+        // Chuyển sang màn hình chi tiết sự kiện
+        val intent = Intent(this, EventDetailActivity::class.java).apply {
+            putExtra("EVENT_ID", event._id)
             putExtra("EVENT_TITLE", event.title)
-            putExtra("EVENT_LATITUDE", event.location.coordinates.latitude)
-            putExtra("EVENT_LONGITUDE", event.location.coordinates.longitude)
-            putExtra("EVENT_RADIUS", event.checkInRadius)
         }
         startActivity(intent)
     }

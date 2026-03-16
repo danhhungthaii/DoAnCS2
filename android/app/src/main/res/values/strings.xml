@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Điểm danh QR</string>
+    <string name="app_name">Quản lý Sinh viên &amp; Điểm danh</string>
     
     <!-- Login Screen -->
     <string name="login_title">Đăng nhập</string>

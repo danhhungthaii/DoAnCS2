@@ -6,18 +6,24 @@ const {
   createStudent,
   updateStudent,
   deleteStudent,
+  getStudentProfile,
 } = require('../controllers/studentController');
 const {
   importStudents,
   downloadTemplate,
   exportStudents
 } = require('../controllers/importController');
-const { authenticate } = require('../middleware/auth');
+const { authenticate, authenticateStudent } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
 /**
  * Student Routes - Tất cả đều cần authenticate
  */
+
+// @route   GET /api/students/profile
+// @desc    Lấy thông tin profile sinh viên đang đăng nhập
+// @access  Private (Student)
+router.get('/profile', authenticateStudent, getStudentProfile);
 
 // @route   GET /api/students/template
 // @desc    Download template Excel mẫu

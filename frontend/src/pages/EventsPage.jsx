@@ -19,6 +19,7 @@ import {
   DeleteOutlined,
   QrcodeOutlined,
   EyeOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { eventService } from '../services/eventService';
@@ -51,7 +52,7 @@ const EventsPage = () => {
 
   const handleCreate = () => {
     // Điều hướng đến trang CreateEvent thay vì mở modal
-    navigate('/events/create');
+    navigate('/admin/events/create');
   };
 
   const handleEdit = (record) => {
@@ -66,6 +67,8 @@ const EventsPage = () => {
       latitude: record.location.coordinates.latitude,
       longitude: record.location.coordinates.longitude,
       checkInRadius: record.checkInRadius,
+      maxAttendees: record.maxAttendees,
+      points: record.points,
     });
     setModalVisible(true);
   };
@@ -96,6 +99,8 @@ const EventsPage = () => {
           },
         },
         checkInRadius: values.checkInRadius,
+        maxAttendees: values.maxAttendees,
+        points: values.points,
       };
 
       if (editingEvent) {
@@ -114,8 +119,17 @@ const EventsPage = () => {
     }
   };
 
-  const handleViewQR = (event) => {
-    navigate(`/qr-display/${event._id}`);
+  const handleGenerateAndViewQR = async (event) => {
+    try {
+      if (!event.qrCode?.code) {
+        message.loading({ content: 'Đang tạo mã QR...', key: 'qr-gen' });
+        await eventService.generateQRCode(event._id);
+        message.success({ content: 'Tạo mã QR thành công!', key: 'qr-gen' });
+      }
+      navigate(`/admin/qr-display/${event._id}`);
+    } catch (error) {
+      message.error({ content: 'Không thể tạo mã QR', key: 'qr-gen' });
+    }
   };
 
   const columns = [
@@ -163,19 +177,57 @@ const EventsPage = () => {
       },
     },
     {
+      title: 'Điểm',
+      dataIndex: 'points',
+      key: 'points',
+      width: 90,
+      render: (points) => `${points ?? 0} điểm`,
+    },
+    {
+      title: 'Giới hạn',
+      key: 'capacity',
+      width: 140,
+      render: (_, record) => {
+        if (record.maxAttendees === null || record.maxAttendees === undefined) {
+          return <Tag>Không giới hạn</Tag>;
+        }
+
+        const isFull = record.registeredCount >= record.maxAttendees;
+        return <Tag color={isFull ? 'red' : 'blue'}>{record.registeredCount || 0}/{record.maxAttendees}</Tag>;
+      },
+    },
+    {
+      title: 'QR',
+      key: 'qrStatus',
+      width: 80,
+      render: (_, record) => (
+        record.qrCode?.code
+          ? <Tag color="green">Đã tạo</Tag>
+          : <Tag color="default">Chưa tạo</Tag>
+      ),
+    },
+    {
       title: 'Thao tác',
       key: 'actions',
       fixed: 'right',
-      width: 200,
+      width: 320,
       render: (_, record) => (
-        <Space size="small">
+        <Space size="small" wrap>
           <Button
             type="primary"
             icon={<QrcodeOutlined />}
             size="small"
-            onClick={() => handleViewQR(record)}
+            onClick={() => handleGenerateAndViewQR(record)}
           >
-            QR
+            {record.qrCode?.code ? 'Xem QR' : 'Tạo QR'}
+          </Button>
+          <Button
+            icon={<UserOutlined />}
+            size="small"
+            onClick={() => navigate(`/admin/events/${record._id}/registrations`)}
+            title="Xem danh sách đăng ký"
+          >
+            Đăng ký ({record.registeredCount || 0}{record.maxAttendees ? `/${record.maxAttendees}` : ''})
           </Button>
           <Button
             icon={<EditOutlined />}
@@ -233,6 +285,7 @@ const EventsPage = () => {
             checkInRadius: 100,
             latitude: 10.762622,
             longitude: 106.660172,
+            points: 5,
           }}
         >
           <Form.Item
@@ -281,7 +334,7 @@ const EventsPage = () => {
             <Input placeholder="VD: Hội trường A, ĐHCNTT" />
           </Form.Item>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-5 gap-4">
             <Form.Item
               name="latitude"
               label="Vĩ độ"
@@ -300,6 +353,22 @@ const EventsPage = () => {
 
             <Form.Item name="checkInRadius" label="Bán kính (m)">
               <InputNumber className="w-full" min={10} max={1000} />
+            </Form.Item>
+
+            <Form.Item
+              name="maxAttendees"
+              label="Số lượng tối đa"
+              rules={[{ required: true, message: 'Nhập số lượng tối đa' }]}
+            >
+              <InputNumber className="w-full" min={1} />
+            </Form.Item>
+
+            <Form.Item
+              name="points"
+              label="Số điểm"
+              rules={[{ required: true, message: 'Nhập số điểm' }]}
+            >
+              <InputNumber className="w-full" min={0} />
             </Form.Item>
           </div>
 

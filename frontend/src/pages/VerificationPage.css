@@ -1,0 +1,24 @@
+.verification-page {
+  padding: 24px;
+}
+
+.verification-page .ant-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.verification-page .ant-table-wrapper {
+  margin-top: 16px;
+}
+
+.verification-page .ant-image {
+  transition: transform 0.2s;
+}
+
+.verification-page .ant-image:hover {
+  transform: scale(1.05);
+}
+
+.verification-page .ant-btn-group {
+  display: flex;
+  gap: 8px;
+}

@@ -16,14 +16,33 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
-        // Backend API URL
-        buildConfigField "String", "API_BASE_URL", "\"http://10.0.2.2:5000/api\""
+        // Backend API URL - Physical Device (cùng WiFi)
+        buildConfigField "String", "API_BASE_URL", "\"http://192.168.2.230:5000/api/\""
+
+        // Nếu dùng emulator, dùng:
+        // buildConfigField "String", "API_BASE_URL", "\"http://10.0.2.2:5000/api/\""
+
+        // Production server (nếu có)
+        // buildConfigField "String", "API_BASE_URL", "\"https://your-domain.com/api/\""
     }
 
     buildTypes {
+        debug {
+            // Development environment - NGROK (Public Access - WiFi + 4G)
+            buildConfigField "String", "API_BASE_URL", "\"https://veta-posthippocampal-discoverably.ngrok-free.dev/api/\""
+            
+            // EMULATOR: Comment dong tren va uncomment dong duoi
+            // buildConfigField "String", "API_BASE_URL", "\"http://10.0.2.2:5000/api/\""
+            
+            // PHYSICAL DEVICE (WiFi only): Comment dong tren va uncomment dong duoi
+            // buildConfigField "String", "API_BASE_URL", "\"http://192.168.2.230:5000/api/\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // Production environment
+            buildConfigField "String", "API_BASE_URL", "\"http://10.0.2.2:5000/api/\""
         }
     }
     
@@ -68,6 +87,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
     
+    // Socket.IO for real-time updates
+    implementation 'io.socket:socket.io-client:2.1.0'
+    
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3'
@@ -79,8 +101,17 @@ dependencies {
     // DataStore (lưu token)
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
     
+    // Glide for image loading
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+    
     // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+// Suppress Java 8 deprecation warnings
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << '-Xlint:-options'
 }

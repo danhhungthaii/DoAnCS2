@@ -7,13 +7,13 @@ export const authService = {
   // Đăng nhập
   login: async (credentials) => {
     const response = await api.post('/auth/login', credentials);
-    
+
     // Lưu token và user info vào localStorage
     if (response.success && response.token) {
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
     }
-    
+
     return response;
   },
 

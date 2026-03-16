@@ -1,0 +1,290 @@
+/* ========================================
+   BUTTON COMPONENT
+   ======================================== */
+
+.btn {
+  /* Base */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-weight: var(--font-medium);
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-base);
+  text-decoration: none;
+  
+  /* Ensure minimum touch target size */
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ========================================
+   VARIANTS
+   ======================================== */
+
+/* Primary - Gradient blue */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+/* Secondary - Glass effect */
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--surface-hover);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Outline - Border only */
+.btn-outline {
+  background: transparent;
+  color: var(--primary-500);
+  border: 1.5px solid var(--primary-500);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.1);
+  transform: translateY(-2px);
+  box-shadow: var(--glow-primary);
+}
+
+/* Ghost - Transparent */
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+/* Danger - Red */
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-danger:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+}
+
+/* ========================================
+   SIZES
+   ======================================== */
+
+.btn-xs {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  border-radius: var(--radius-md);
+  gap: var(--space-1);
+}
+
+.btn-sm {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-md);
+}
+
+.btn-md {
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--text-base);
+  border-radius: var(--radius-lg);
+}
+
+.btn-lg {
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--text-lg);
+  border-radius: var(--radius-lg);
+}
+
+.btn-xl {
+  padding: var(--space-5) var(--space-8);
+  font-size: var(--text-xl);
+  border-radius: var(--radius-xl);
+  gap: var(--space-3);
+}
+
+/* ========================================
+   LOADING STATE
+   ======================================== */
+
+.btn-loading {
+  pointer-events: none;
+}
+
+.btn-loading .btn-text {
+  opacity: 0.7;
+}
+
+.btn-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Spinner sizes for different button sizes */
+.btn-xs .btn-spinner {
+  width: 12px;
+  height: 12px;
+  border-width: 1.5px;
+}
+
+.btn-sm .btn-spinner {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-lg .btn-spinner {
+  width: 18px;
+  height: 18px;
+  border-width: 2.5px;
+}
+
+.btn-xl .btn-spinner {
+  width: 20px;
+  height: 20px;
+  border-width: 3px;
+}
+
+/* ========================================
+   FULL WIDTH
+   ======================================== */
+
+.btn-full-width {
+  width: 100%;
+}
+
+/* ========================================
+   ICON ALIGNMENT
+   ======================================== */
+
+.btn-icon,
+.btn-icon-right {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Icon sizing */
+.btn-icon svg,
+.btn-icon-right svg {
+  width: 1em;
+  height: 1em;
+}
+
+.btn-xs .btn-icon svg,
+.btn-xs .btn-icon-right svg {
+  width: 12px;
+  height: 12px;
+}
+
+.btn-sm .btn-icon svg,
+.btn-sm .btn-icon-right svg {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-md .btn-icon svg,
+.btn-md .btn-icon-right svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-lg .btn-icon svg,
+.btn-lg .btn-icon-right svg {
+  width: 18px;
+  height: 18px;
+}
+
+.btn-xl .btn-icon svg,
+.btn-xl .btn-icon-right svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 767px) {
+  /* Stack buttons vertically on mobile */
+  .btn-group-mobile-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  .btn-group-mobile-stack .btn {
+    width: 100%;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .btn {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+  
+  .btn:hover:not(:disabled) {
+    transform: none;
+  }
+  
+  .btn-spinner {
+    animation: none;
+  }
+}

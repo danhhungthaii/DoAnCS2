@@ -1,0 +1,231 @@
+/* ========================================
+   INPUT COMPONENT
+   ======================================== */
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.input-full-width {
+  width: 100%;
+}
+
+/* ========================================
+   LABEL
+   ======================================== */
+
+.input-label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.input-required {
+  color: var(--danger);
+  margin-left: var(--space-1);
+}
+
+/* ========================================
+   CONTAINER
+   ======================================== */
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  border: 1.5px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  transition: var(--transition-base);
+  overflow: hidden;
+}
+
+.input-container:hover:not(.input-disabled) {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: var(--surface-hover);
+}
+
+.input-focused {
+  border-color: var(--primary-500);
+  background: var(--surface-hover);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input-error {
+  border-color: var(--danger);
+}
+
+.input-error:focus-within {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.input-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   INPUT FIELD
+   ======================================== */
+
+.input-field {
+  flex: 1;
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--font-normal);
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: var(--space-3) var(--space-4);
+}
+
+.input-field::placeholder {
+  color: var(--text-muted);
+}
+
+.input-field:disabled {
+  cursor: not-allowed;
+}
+
+/* ========================================
+   SIZES
+   ======================================== */
+
+.input-sm .input-field {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.input-md .input-field {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-base);
+}
+
+.input-lg .input-field {
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--text-lg);
+}
+
+/* ========================================
+   ICONS
+   ======================================== */
+
+.input-icon,
+.input-icon-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.input-icon {
+  padding-left: var(--space-4);
+}
+
+.input-icon-right {
+  padding-right: var(--space-4);
+}
+
+.input-with-icon .input-field {
+  padding-left: var(--space-2);
+}
+
+.input-with-icon-right .input-field {
+  padding-right: var(--space-2);
+}
+
+.input-icon svg,
+.input-icon-right svg {
+  width: 18px;
+  height: 18px;
+}
+
+.input-sm .input-icon svg,
+.input-sm .input-icon-right svg {
+  width: 16px;
+  height: 16px;
+}
+
+.input-lg .input-icon svg,
+.input-lg .input-icon-right svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ========================================
+   MESSAGES
+   ======================================== */
+
+.input-error-message {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--danger);
+  margin: 0;
+}
+
+.input-hint {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ========================================
+   SPECIAL INPUT TYPES
+   ======================================== */
+
+/* Password reveal button */
+.input-password-toggle {
+  background: none;
+  border: none;
+  padding: 0 var(--space-4);
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition-colors);
+}
+
+.input-password-toggle:hover {
+  color: var(--text-secondary);
+}
+
+/* Search input */
+.input-search .input-field {
+  padding-left: var(--space-10);
+}
+
+.input-search .input-icon {
+  position: absolute;
+  left: 0;
+  padding-left: var(--space-4);
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+.input-field:focus-visible {
+  outline: none;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .input-container {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .input-container {
+    transition: none;
+  }
+}

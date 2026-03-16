@@ -2,16 +2,16 @@ const QRCode = require('qrcode');
 const crypto = require('crypto');
 
 /**
- * Generate unique QR code for event
+ * 
  * @param {String} eventId - Event ID
  * @param {Boolean} permanent - Nếu true, tạo mã cố định không expire
  * @returns {Object} QR code data {code, dataUrl, expiresAt}
  */
 const generateEventQRCode = async (eventId, permanent = true) => {
   try {
-    // Tạo mã cố định chỉ dựa trên eventId (không có timestamp/random)
+    // Tạo mã cố định chỉ dựa trên eventId 
     const uniqueCode = permanent 
-      ? `EVENT-${eventId}` // Mã cố định
+      ? `EVENT-${eventId}` 
       : `${eventId}-${Date.now()}-${crypto.randomBytes(8).toString('hex')}`; // Mã động
 
     // Tạo QR code dạng Data URL
@@ -41,7 +41,7 @@ const generateEventQRCode = async (eventId, permanent = true) => {
  * Verify QR code validity
  * @param {String} code - QR code to verify
  * @param {String} eventId - Event ID
- * @param {Date} expiresAt - Expiration date (null nếu không expire)
+ * @param {Date} expiresAt - Expiration date 
  * @returns {Boolean} True if valid
  */
 const verifyQRCode = (code, eventId, expiresAt) => {

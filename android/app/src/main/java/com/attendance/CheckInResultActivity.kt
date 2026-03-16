@@ -64,8 +64,8 @@ class CheckInResultActivity : AppCompatActivity() {
 
         val btnBack = Button(this).apply {
             id = View.generateViewId()
-            text = "Quay về danh sách"
-            setOnClickListener { navigateToEventList() }
+            text = "Về trang chủ"
+            setOnClickListener { navigateToHome() }
             layoutParams = ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT
@@ -104,8 +104,8 @@ class CheckInResultActivity : AppCompatActivity() {
         setContentView(layout)
     }
 
-    private fun navigateToEventList() {
-        val intent = Intent(this, EventListActivity::class.java)
+    private fun navigateToHome() {
+        val intent = Intent(this, HomeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         startActivity(intent)
         finish()
@@ -114,7 +114,7 @@ class CheckInResultActivity : AppCompatActivity() {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         super.onBackPressed()
-        navigateToEventList()
+        navigateToHome()
     }
 }
 

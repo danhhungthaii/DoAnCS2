@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { register, login, getMe } = require('../controllers/authController');
-const { authenticate, authorizeAdmin } = require('../middleware/auth');
+const { register, login, getMe, studentLogin, changePassword } = require('../controllers/authController');
+const { authenticate, authenticateStudent, authorizeAdmin } = require('../middleware/auth');
 
 /**
  * Auth Routes
@@ -16,6 +16,16 @@ router.post('/register', authenticate, authorizeAdmin, register);
 // @desc    Đăng nhập
 // @access  Public
 router.post('/login', login);
+
+// @route   POST /api/auth/student-login
+// @desc    Đăng nhập Sinh viên (Android App)
+// @access  Public
+router.post('/student-login', studentLogin);
+
+// @route   POST /api/auth/change-password
+// @desc    Đổi mật khẩu Sinh viên
+// @access  Private (Student authenticated)
+router.post('/change-password', authenticateStudent, changePassword);
 
 // @route   GET /api/auth/me
 // @desc    Lấy thông tin user hiện tại

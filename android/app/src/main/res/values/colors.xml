@@ -1,34 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ============================================ -->
+    <!-- Dark Glassmorphism Theme — Navy + Blue        -->
+    <!-- Matching web's darkGlass design system        -->
+    <!-- ============================================ -->
+
     <!-- Primary Colors -->
-    <color name="primary">#1890FF</color>
-    <color name="primary_dark">#096DD9</color>
-    <color name="primary_light">#40A9FF</color>
-    <color name="accent">#52C41A</color>
-    
+    <color name="primary">#3B82F6</color>           <!-- Electric Blue -->
+    <color name="primary_dark">#2563EB</color>       <!-- Darker Blue -->
+    <color name="primary_light">#60A5FA</color>      <!-- Lighter Blue -->
+    <color name="accent">#06B6D4</color>             <!-- Cyan -->
+    <color name="accent_dark">#0891B2</color>        <!-- Darker Cyan -->
+    <color name="violet">#8B5CF6</color>             <!-- Violet accent -->
+
+    <!-- Background Colors — Deep Navy -->
+    <color name="background">#0A0E1A</color>         <!-- Darkest navy -->
+    <color name="background_dark">#070B14</color>    <!-- Even darker -->
+    <color name="background_light">#0F1425</color>   <!-- Slightly lighter -->
+    <color name="surface">#151B30</color>             <!-- Card surfaces -->
+    <color name="surface_light">#1C2440</color>      <!-- Elevated surface -->
+    <color name="divider">#1E2A4A</color>            <!-- Dividers -->
+
+    <!-- Glass Effect Colors -->
+    <color name="glass">#0AFFFFFF</color>            <!-- 4% white -->
+    <color name="glass_border">#14FFFFFF</color>     <!-- 8% white -->
+    <color name="glass_hover">#1AFFFFFF</color>      <!-- 10% white -->
+
     <!-- Text Colors -->
-    <color name="text_primary">#262626</color>
-    <color name="text_secondary">#8C8C8C</color>
-    <color name="text_disabled">#BFBFBF</color>
-    
+    <color name="text_primary">#F1F5F9</color>       <!-- Near-white -->
+    <color name="text_secondary">#94A3B8</color>     <!-- Muted -->
+    <color name="text_tertiary">#64748B</color>      <!-- Faint -->
+    <color name="text_disabled">#475569</color>      <!-- Disabled -->
+    <color name="text_on_primary">#FFFFFF</color>    <!-- On blue buttons -->
+
     <!-- Status Colors -->
-    <color name="status_success">#52C41A</color>
-    <color name="status_warning">#FA8C16</color>
-    <color name="status_error">#F5222D</color>
-    <color name="status_ongoing">#1890FF</color>
-    <color name="status_upcoming">#722ED1</color>
-    <color name="status_completed">#8C8C8C</color>
-    
+    <color name="status_success">#22C55E</color>     <!-- Green -->
+    <color name="status_warning">#EAB308</color>     <!-- Amber -->
+    <color name="status_error">#EF4444</color>       <!-- Red -->
+    <color name="error">#EF4444</color>              <!-- Error alias -->
+    <color name="status_ongoing">#3B82F6</color>     <!-- Blue -->
+    <color name="status_upcoming">#06B6D4</color>    <!-- Cyan -->
+    <color name="status_completed">#64748B</color>   <!-- Gray -->
+
+    <!-- Gradient Colors -->
+    <color name="gradient_start">#3B82F6</color>     <!-- Blue -->
+    <color name="gradient_mid">#6366F1</color>       <!-- Indigo -->
+    <color name="gradient_end">#8B5CF6</color>       <!-- Violet -->
+
+    <!-- Input Field Colors -->
+    <color name="input_background">#0F1425</color>
+    <color name="input_stroke">#1E2A4A</color>
+    <color name="input_stroke_focused">#3B82F6</color>
+
     <!-- Launcher Icon -->
-    <color name="ic_launcher_background">#1890FF</color>
+    <color name="ic_launcher_background">#0A0E1A</color>
 
+    <!-- Overlay -->
+    <color name="overlay">#CC000000</color>
+    <color name="scan_border">#3B82F6</color>
 
-    <!-- Background Colors -->
-    <color name="background">#F0F2F5</color>
-    <color name="surface">#FFFFFF</color>
-    <color name="divider">#E8E8E8</color>
-    
-    <!-- Transparent Colors -->
-    <color name="overlay">#80000000</color>
-    <color name="scan_border">#FFFFFF</color>
+    <!-- Bottom Nav -->
+    <color name="nav_active">#3B82F6</color>
+    <color name="nav_inactive">#475569</color>
 </resources>

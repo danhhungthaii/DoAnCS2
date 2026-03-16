@@ -34,9 +34,25 @@
             </intent-filter>
         </activity>
         
-        <!-- Event List Activity -->
+        <!-- Change Password Activity -->
         <activity
-            android:name=".EventListActivity"
+            android:name=".ChangePasswordActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- Home Activity with Bottom Navigation -->
+        <activity
+            android:name=".HomeActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- AI Chat Activity -->
+        <activity
+            android:name=".ChatActivity"
+            android:screenOrientation="portrait" />
+
+
+        <!-- Event Detail Activity -->
+        <activity
+            android:name=".EventDetailActivity"
             android:screenOrientation="portrait" />
         
         <!-- QR Scanner Activity -->
@@ -44,10 +60,41 @@
             android:name=".ScanQRActivity"
             android:screenOrientation="portrait" />
         
+        <!-- Check-in Activity -->
+        <activity
+            android:name=".CheckInActivity"
+            android:screenOrientation="portrait" />
+        
+        <!-- Check-in Form Activity -->
+        <activity
+            android:name=".CheckInFormActivity"
+            android:screenOrientation="portrait" />
+        
+        <!-- Points Activity -->
+        <activity
+            android:name=".PointsActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- History Activity -->
+        <activity
+            android:name=".HistoryActivity"
+            android:screenOrientation="portrait" />
+        
         <!-- Check-in Result Activity -->
         <activity
             android:name=".CheckInResultActivity"
             android:screenOrientation="portrait" />
+
+        <!-- FileProvider for Camera -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
     </application>
 

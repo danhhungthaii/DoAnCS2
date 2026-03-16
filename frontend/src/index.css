@@ -5,16 +5,318 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   FRIENDLY & ORGANIC THEME
+   Warm, Approachable, Human-Centered
+   ============================================ */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+:root {
+  /* Warm Color Palette */
+  --organic-cream: #FFFEF7;
+  --organic-beige: #FFF9F0;
+  --organic-sand: #FFE8D1;
+  
+  --organic-olive-light: #B5C18E;
+  --organic-olive: #8B9556;
+  --organic-olive-dark: #6B7446;
+  
+  --organic-orange-light: #FF8C42;
+  --organic-orange: #FF6B35;
+  --organic-orange-dark: #E85A2B;
+  
+  --organic-yellow-light: #FFE66D;
+  --organic-yellow: #FFDD67;
+  --organic-yellow-dark: #F4C542;
+  
+  --organic-blue-light: #465B72;
+  --organic-blue: #2C3E50;
+  --organic-blue-dark: #1A2332;
+  
+  --organic-brown-light: #C9A882;
+  --organic-brown: #A67C52;
+  --organic-brown-dark: #896647;
+  
+  /* Typography */
+  --font-body: 'Nunito', 'Quicksand', 'Poppins', system-ui, sans-serif;
+  --font-display: 'Poppins', 'Quicksand', sans-serif;
+  --font-handwritten: 'Caveat', 'Patrick Hand', 'Indie Flower', cursive;
+  
+  /* Spacing - Flexible */
+  --spacing-xs: 0.5rem;   /* 8px */
+  --spacing-sm: 1rem;     /* 16px */
+  --spacing-md: 1.5rem;   /* 24px */
+  --spacing-lg: 2.5rem;   /* 40px */
+  --spacing-xl: 4rem;     /* 64px */
+  --spacing-2xl: 6rem;    /* 96px */
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-body);
+  background-color: var(--organic-cream);
+  color: var(--organic-blue);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* Friendly Typography - Rounded & Warm */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--organic-blue);
+  letter-spacing: 0;
+}
+
+h1 { 
+  font-size: clamp(2.5rem, 5vw, 4rem); 
+  font-weight: 800;
+}
+
+h2 { 
+  font-size: clamp(2rem, 4vw, 3.5rem); 
+  font-weight: 700;
+}
+
+h3 { 
+  font-size: clamp(1.75rem, 3vw, 2.75rem); 
+  font-weight: 600;
+}
+
+h4 { 
+  font-size: clamp(1.5rem, 2.5vw, 2rem); 
+  font-weight: 600;
+}
+
+/* Handwritten accent titles */
+.title-handwritten {
+  font-family: var(--font-handwritten);
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--organic-orange);
+  font-weight: 700;
+}
+
+/* Organic Buttons - Rounded & Friendly */
+.btn-organic {
+  background: var(--organic-orange);
+  color: #FFFFFF;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 2rem;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+}
+
+.btn-organic:hover {
+  background: var(--organic-orange-dark);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-organic:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+}
+
+.btn-organic-secondary {
+  background: var(--organic-olive);
+  color: #FFFFFF;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 2rem;
+  box-shadow: 0 4px 12px rgba(139, 149, 86, 0.2);
+}
+
+.btn-organic-secondary:hover {
+  background: var(--organic-olive-dark);
+  box-shadow: 0 6px 20px rgba(139, 149, 86, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-organic-outline {
+  background: transparent;
+  color: var(--organic-orange);
+  border: 2px solid var(--organic-orange);
+  padding: 0.875rem 1.875rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 2rem;
+}
+
+.btn-organic-outline:hover {
+  background: var(--organic-orange);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+}
+
+/* Organic Cards - Soft & Rounded */
+.card-organic {
+  background: #FFFFFF;
+  border: none;
+  border-radius: 2rem;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.card-organic:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+}
+
+/* Blob shapes for organic feel */
+.blob-shape {
+  border-radius: 30% 70% 70% 30% / 60% 40% 60% 40%;
+}
+
+.blob-shape-alt {
+  border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%;
+}
+
+/* Organic accent elements */
+.accent-wave {
+  position: relative;
+  overflow: hidden;
+}
+
+.accent-wave::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--organic-yellow-light), transparent);
+  opacity: 0.1;
+}
+
+/* Soft dividers */
+.divider-organic {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--organic-sand), transparent);
+  margin: var(--spacing-lg) 0;
+}
+
+/* Section spacing - organic flow */
+.section-organic {
+  padding: var(--spacing-2xl) 0;
+}
+
+.container-organic {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* Data display - friendly & approachable */
+.data-label-organic {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--organic-olive);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-xs);
+}
+
+.data-value-organic {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--organic-orange);
+  line-height: 1;
+}
+
+/* Organic Inputs - Rounded */
+.input-organic {
+  background: #FFFFFF;
+  border: 2px solid var(--organic-beige);
+  border-radius: 1rem;
+  padding: 0.875rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--organic-blue);
+  transition: all 0.3s ease;
+  font-family: var(--font-body);
+}
+
+.input-organic:focus {
+  outline: none;
+  border-color: var(--organic-orange);
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+}
+
+/* Utility classes */
+.text-warm {
+  color: var(--organic-orange);
+}
+
+.text-natural {
+  color: var(--organic-olive);
+}
+
+.text-muted-organic {
+  color: var(--organic-brown-light);
+}
+
+.bg-warm {
+  background: var(--organic-beige);
+}
+
+.bg-accent-organic {
+  background: var(--organic-orange);
+  color: #FFFFFF;
+}
+
+/* Organic Animations - Bouncy & Playful */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(30px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes floatUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.animate-float-up {
+  animation: floatUp 0.6s ease-out;
 }

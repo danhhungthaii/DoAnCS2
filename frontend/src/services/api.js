@@ -25,6 +25,10 @@ api.interceptors.request.use(
 // Response interceptor - Xử lý lỗi global
 api.interceptors.response.use(
   (response) => {
+    // For blob responses (file downloads), return the full response
+    if (response.config.responseType === 'blob') {
+      return response;
+    }
     return response.data; // Trả về data trực tiếp
   },
   (error) => {
@@ -38,7 +42,7 @@ api.interceptors.response.use(
     // Trả về error message
     const errorMessage =
       error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại';
-    
+
     return Promise.reject(new Error(errorMessage));
   }
 );

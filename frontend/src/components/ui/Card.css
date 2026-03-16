@@ -1,0 +1,164 @@
+/* ========================================
+   CARD COMPONENT
+   ======================================== */
+
+.card {
+  /* Base */
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: var(--transition-base);
+  position: relative;
+}
+
+/* ========================================
+   VARIANTS
+   ======================================== */
+
+/* Glass - Glassmorphism effect (default) */
+.card-glass {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Elevated - Raised card with shadow */
+.card-elevated {
+  background: var(--bg-tertiary);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: var(--shadow-md);
+}
+
+/* Bordered - Simple border */
+.card-bordered {
+  background: var(--bg-secondary);
+  border: 1px solid var(--surface-border);
+}
+
+/* Flat - No border or shadow */
+.card-flat {
+  background: var(--bg-secondary);
+}
+
+/* ========================================
+   HOVER STATE
+   ======================================== */
+
+.card-hover {
+  cursor: default;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+}
+
+.card-glass.card-hover:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-elevated.card-hover:hover {
+  box-shadow: var(--shadow-xl);
+}
+
+.card-bordered.card-hover:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-md);
+}
+
+/* ========================================
+   CLICKABLE STATE
+   ======================================== */
+
+.card-clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.card-clickable:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+.card-clickable:active {
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   CARD SECTIONS
+   ======================================== */
+
+.card-header {
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--surface-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.card-content {
+  padding: var(--space-6);
+  flex: 1;
+}
+
+.card-footer {
+  padding: var(--space-5) var(--space-6);
+  border-top: 1px solid var(--surface-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ========================================
+   COMPACT VARIANT
+   ======================================== */
+
+.card-compact .card-header {
+  padding: var(--space-4) var(--space-5);
+}
+
+.card-compact .card-content {
+  padding: var(--space-5);
+}
+
+.card-compact .card-footer {
+  padding: var(--space-4) var(--space-5);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 767px) {
+  .card-header {
+    padding: var(--space-4) var(--space-5);
+  }
+  
+  .card-content {
+    padding: var(--space-5);
+  }
+  
+  .card-footer {
+    padding: var(--space-4) var(--space-5);
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+  
+  .card-hover:hover,
+  .card-clickable:active {
+    transform: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .card {
+    border: 2px solid currentColor;
+  }
+}

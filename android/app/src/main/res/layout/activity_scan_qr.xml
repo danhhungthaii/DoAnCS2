@@ -7,6 +7,7 @@
     android:background="@android:color/black"
     tools:context=".ScanQRActivity">
 
+    <!-- Camera Preview -->
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
         android:layout_width="0dp"
@@ -16,72 +17,128 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Semi-transparent Overlay - Làm nhạt hơn để nhìn QR rõ -->
     <View
         android:id="@+id/viewOverlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#80000000"
+        android:background="#33000000"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <View
-        android:id="@+id/viewScanArea"
+    <!-- Scan Area Frame - Trong suốt với 4 góc nổi bật -->
+    <FrameLayout
+        android:id="@+id/scanAreaContainer"
         android:layout_width="280dp"
         android:layout_height="280dp"
-        android:background="@drawable/scan_border"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <TextView
-        android:id="@+id/tvInstruction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hướng camera vào mã QR"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:background="#80000000"
-        android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/viewScanArea"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        app:layout_constraintVertical_bias="0.4">
+        
+        <!-- Transparent Center Area -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"/>
+            
+        <!-- Top Left Corner -->
+        <View
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="top|start"
+            android:background="@drawable/scan_corner_top_left"/>
+            
+        <!-- Top Right Corner -->
+        <View
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="top|end"
+            android:background="@drawable/scan_corner_top_right"/>
+            
+        <!-- Bottom Left Corner -->
+        <View
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|start"
+            android:background="@drawable/scan_corner_bottom_left"/>
+            
+        <!-- Bottom Right Corner -->
+        <View
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/scan_corner_bottom_right"/>
+            
+        <!-- Scan line animation -->
+        <View
+            android:id="@+id/scanLine"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="@drawable/scan_line_gradient"/>
+            
+    </FrameLayout>
 
+    <!-- Close Button (Left Top) -->
     <ImageButton
         android:id="@+id/btnBack"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:tint="@android:color/white"
-        android:contentDescription="Quay lại"
+        app:tint="@android:color/white"
+        android:contentDescription="Đóng"
+        android:scaleType="centerInside"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="16dp"/>
+        android:layout_marginTop="48dp"
+        android:layout_marginStart="16dp"/>
 
+    <!-- Event Title (Top Center) -->
     <TextView
         android:id="@+id/tvEventTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Tên sự kiện"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textColor="@color/primary"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:background="#80000000"
-        android:padding="16dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintTop_toTopOf="@id/btnBack"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
         app:layout_constraintStart_toEndOf="@id/btnBack"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginEnd="64dp"/>
 
+    <!-- Bottom Instruction Pill -->
+    <TextView
+        android:id="@+id/tvInstruction"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Hướng camera vào mã QR trên màn hình để điểm danh"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:background="@drawable/instruction_background"
+        android:layout_marginHorizontal="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="48dp"/>
+
+    <!-- Loading Indicator -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:indeterminateTint="@color/accent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

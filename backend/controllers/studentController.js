@@ -10,7 +10,7 @@ exports.getAllStudents = async (req, res) => {
     const { class: className, search, sort = 'studentCode' } = req.query;
 
     // Build query
-    const query = { isActive: true };
+    const query = {};
     
     if (className) {
       query.class = className;
@@ -143,13 +143,13 @@ exports.updateStudent = async (req, res) => {
 };
 
 /**
- * @desc    Xóa sinh viên (soft delete)
+ * @desc    Xóa sinh viên
  * @route   DELETE /api/students/:id
  * @access  Private
  */
 exports.deleteStudent = async (req, res) => {
   try {
-    const student = await Student.findById(req.params.id);
+    const student = await Student.findByIdAndDelete(req.params.id);
 
     if (!student) {
       return res.status(404).json({
@@ -157,10 +157,6 @@ exports.deleteStudent = async (req, res) => {
         message: 'Không tìm thấy sinh viên',
       });
     }
-
-    // Soft delete
-    student.isActive = false;
-    await student.save();
 
     res.status(200).json({
       success: true,
@@ -171,6 +167,36 @@ exports.deleteStudent = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Lỗi khi xóa sinh viên',
+    });
+  }
+};
+
+/**
+ * @desc    Lấy thông tin profile sinh viên đăng nhập
+ * @route   GET /api/students/profile
+ * @access  Private (Student)
+ */
+exports.getStudentProfile = async (req, res) => {
+  try {
+    // req.student được set bởi authenticateStudent middleware
+    const student = await Student.findById(req.student._id).select('-password');
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy thông tin sinh viên',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: student,
+    });
+  } catch (error) {
+    console.error('Get student profile error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi khi lấy thông tin profile',
     });
   }
 };

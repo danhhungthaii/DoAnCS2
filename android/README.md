@@ -51,11 +51,60 @@ android/
 
 ## Cấu hình Backend URL
 
-File: `api/RetrofitClient.kt`
+### File: `app/build.gradle`
 
-```kotlin
-private const val BASE_URL = "http://10.0.2.2:5000/api"  // Android Emulator
-// Nếu dùng thiết bị thật: thay bằng IP máy tính (vd: http://192.168.1.10:5000/api)
+```groovy
+buildTypes {
+    debug {
+        // Development - Android Emulator
+        buildConfigField "String", "API_BASE_URL", "\"http://10.0.2.2:5000/api/\""
+    }
+    release {
+        // Production
+        buildConfigField "String", "API_BASE_URL", "\"http://10.0.2.2:5000/api/\""
+    }
+}
+```
+
+### Các trường hợp:
+
+**1. Android Emulator (mặc định):**
+```groovy
+buildConfigField "String", "API_BASE_URL", "\"http://10.0.2.2:5000/api/\""
+```
+- `10.0.2.2` = localhost của máy host
+- Dùng khi test trên emulator
+
+**2. Thiết bị thật (qua WiFi):**
+```groovy
+buildConfigField "String", "API_BASE_URL", "\"http://192.168.1.100:5000/api/\""
+```
+- Thay `192.168.1.100` bằng IP thực tế của máy tính
+- Tìm IP: `ipconfig` (Windows) hoặc `ifconfig` (Mac/Linux)
+- Phải cùng mạng WiFi
+
+**3. Production Server:**
+```groovy
+buildConfigField "String", "API_BASE_URL", "\"https://your-domain.com/api/\""
+```
+
+**Lưu ý:** Sau khi thay đổi API URL, phải rebuild app:
+```bash
+.\gradlew clean assembleDebug
+```
+
+### File: `api/RetrofitClient.kt`
+
+App đã tích hợp:
+- ✅ Logging chi tiết (request/response)
+- ✅ Retry on connection failure
+- ✅ Timeout 30s
+- ✅ Auto-test connection khi khởi động
+
+Xem log trong Logcat:
+```
+D/RetrofitClient: Initializing RetrofitClient with BASE_URL: http://10.0.2.2:5000/api/
+D/MainActivity: API Connection Test: Kết nối thành công với backend!
 ```
 
 ## Build và chạy

@@ -46,8 +46,41 @@ const attendanceSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['present', 'late', 'absent'],
-      default: 'present',
+      enum: ['registered', 'present', 'late', 'absent'],
+      default: 'present', // Default là present khi check-in, sẽ là registered khi đăng ký
+    },
+    // Registration info
+    registeredAt: {
+      type: Date,
+    },
+    // Evidence & Verification
+    evidencePhoto: {
+      type: String, // Path to uploaded photo
+      trim: true,
+    },
+    verificationStatus: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending',
+    },
+    verifiedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User', // Admin who verified
+    },
+    verifiedAt: {
+      type: Date,
+    },
+    verificationNotes: {
+      type: String,
+      trim: true,
+    },
+    // Points awarded
+    pointsAwarded: {
+      type: Number,
+      default: 0,
+    },
+    pointsAwardedAt: {
+      type: Date,
     },
     notes: {
       type: String,

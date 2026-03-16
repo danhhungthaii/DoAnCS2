@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, Table, Button, message, Spin, Tag, Statistic } from 'antd';
+import { Card, Table, Button, message, Spin, Tag, Statistic, Upload } from 'antd';
 import { QRCodeSVG } from 'qrcode.react';
-import { ReloadOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { ReloadOutlined, CheckCircleOutlined, PictureOutlined, UploadOutlined } from '@ant-design/icons';
 import { eventService } from '../services/eventService';
 import socketService from '../services/socketService';
 import dayjs from 'dayjs';
@@ -14,6 +14,7 @@ const QRDisplayPage = () => {
   const [qrData, setQrData] = useState(null);
   const [attendances, setAttendances] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [uploadingBanner, setUploadingBanner] = useState(false);
 
   useEffect(() => {
     fetchEventData();
@@ -34,6 +35,10 @@ const QRDisplayPage = () => {
         eventService.getEventAttendances(currentEventId),
       ]);
 
+      console.log('Event data:', eventRes.data);
+      console.log('Banner URL from event:', eventRes.data.bannerUrl);
+      console.log('Constructed image URL:', `${import.meta.env.VITE_API_URL?.replace('/api', '')}${eventRes.data.bannerUrl}`);
+
       setEvent(eventRes.data);
       setQrData(eventRes.data.qrCode);
       setAttendances(attendanceRes.data || []);
@@ -53,10 +58,22 @@ const QRDisplayPage = () => {
     // Lắng nghe check-in mới
     socketService.onNewCheckIn((data) => {
       if (data.eventId === currentEventId) {
-        setAttendances((prev) => [data.attendance, ...prev]);
-        message.success(
-          `${data.attendance.student.fullName} đã check-in thành công!`
-        );
+        // ✅ De-duplicate: Check if attendance already exists in list
+        const attendanceId = data.attendance?._id;
+        
+        setAttendances((prev) => {
+          const alreadyExists = prev.some(a => a._id === attendanceId);
+          
+          if (!alreadyExists) {
+            message.success(
+              `${data.attendance.student.fullName} đã check-in thành công!`
+            );
+            return [data.attendance, ...prev];
+          } else {
+            console.log('⚠️ Duplicate socket event ignored:', attendanceId);
+            return prev;
+          }
+        });
       }
     });
 
@@ -79,6 +96,50 @@ const QRDisplayPage = () => {
     } catch (error) {
       message.error('Không thể tạo QR mới');
     }
+  };
+
+  const handleBannerUpload = async (info) => {
+    const { file } = info;
+    
+    console.log('Upload status:', file.status);
+    console.log('Upload response:', file.response);
+    
+    if (file.status === 'uploading') {
+      setUploadingBanner(true);
+      return;
+    }
+
+    if (file.status === 'done') {
+      try {
+        // Refresh event data to get new banner
+        const eventRes = await eventService.getEventById(currentEventId);
+        setEvent(eventRes.data);
+        message.success('Tải banner thành công!');
+      } catch (error) {
+        console.error('Error refreshing event:', error);
+        message.error('Không thể cập nhật banner');
+      } finally {
+        setUploadingBanner(false);
+      }
+    } else if (file.status === 'error') {
+      console.error('Upload error:', file.error);
+      console.error('Server response:', file.response);
+      
+      const errorMsg = file.response?.message || file.error?.message || 'Tải banner thất bại';
+      message.error(errorMsg);
+      setUploadingBanner(false);
+    }
+  };
+
+  const uploadProps = {
+    name: 'banner',
+    action: `${import.meta.env.VITE_API_URL}/events/${currentEventId}/upload-banner`,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    accept: 'image/*',
+    showUploadList: false,
+    onChange: handleBannerUpload,
   };
 
   const columns = [
@@ -121,15 +182,30 @@ const QRDisplayPage = () => {
       render: (distance) => `${distance}m`,
     },
     {
-      title: 'Trạng thái',
+      title: 'Trạng thái GPS',
       dataIndex: 'isValid',
       key: 'isValid',
       width: 120,
       render: (isValid) => (
         <Tag color={isValid ? 'green' : 'orange'}>
-          {isValid ? 'Hợp lệ' : 'Ngoài vùng'}
+          {isValid ? 'Trong vùng' : 'Ngoài vùng'}
         </Tag>
       ),
+    },
+    {
+      title: 'Xác nhận',
+      dataIndex: 'verificationStatus',
+      key: 'verificationStatus',
+      width: 120,
+      render: (status) => {
+        const statusConfig = {
+          pending: { color: 'blue', text: 'Chờ duyệt' },
+          approved: { color: 'green', text: 'Đã duyệt' },
+          rejected: { color: 'red', text: 'Từ chối' },
+        };
+        const config = statusConfig[status] || { color: 'default', text: status };
+        return <Tag color={config.color}>{config.text}</Tag>;
+      },
     },
   ];
 
@@ -147,30 +223,100 @@ const QRDisplayPage = () => {
         {event?.title}
       </h1>
 
+      {/* Event Banner Card */}
+      <Card 
+        className="mb-6"
+        title={
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <PictureOutlined />
+              <span>Banner Sự kiện</span>
+            </span>
+            <Upload {...uploadProps}>
+              <Button 
+                icon={<UploadOutlined />} 
+                loading={uploadingBanner}
+                size="small"
+              >
+                {event?.bannerUrl ? 'Thay đổi hình' : 'Tải lên'}
+              </Button>
+            </Upload>
+          </div>
+        }
+      >
+        {event?.bannerUrl ? (
+          <div className="relative group">
+            <img
+              src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}${event.bannerUrl}`}
+              alt={event.title}
+              className="w-full h-64 object-cover rounded-lg"
+              style={{
+                maxHeight: '300px',
+                objectFit: 'cover',
+              }}
+              onError={(e) => {
+                console.error('Image load error:', e.target.src);
+                console.error('VITE_API_URL:', import.meta.env.VITE_API_URL);
+                console.error('event.bannerUrl:', event.bannerUrl);
+                e.target.style.display = 'none';
+              }}
+              onLoad={() => {
+                console.log('Image loaded successfully:', `${import.meta.env.VITE_API_URL?.replace('/api', '')}${event.bannerUrl}`);
+              }}
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all rounded-lg flex items-center justify-center">
+              <Upload {...uploadProps}>
+                <Button 
+                  type="primary"
+                  icon={<UploadOutlined />}
+                  size="large"
+                  loading={uploadingBanner}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  Thay đổi Banner
+                </Button>
+              </Upload>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-16 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+            <PictureOutlined style={{ fontSize: '48px', color: '#d9d9d9', marginBottom: '16px' }} />
+            <p className="text-gray-500 mb-4">Chưa có banner cho sự kiện này</p>
+            <Upload {...uploadProps}>
+              <Button 
+                type="primary" 
+                icon={<UploadOutlined />}
+                loading={uploadingBanner}
+              >
+                Tải lên Banner
+              </Button>
+            </Upload>
+            <p className="text-xs text-gray-400 mt-2">Khuyến nghị: 1920x600px, JPG/PNG</p>
+          </div>
+        )}
+      </Card>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* QR Code Display */}
         <Card className="lg:col-span-1">
           <div className="text-center">
             <h2 className="text-xl font-bold mb-4">Mã QR Điểm danh</h2>
-            
+
             {qrData?.code ? (
               <div className="flex flex-col items-center">
                 <div className="bg-white p-4 rounded-lg shadow-lg">
                   <QRCodeSVG
-                    value={JSON.stringify({
-                      event_id: currentEventId,
-                      code: qrData.code,
-                    })}
+                    value={qrData.code}
                     size={280}
                     level="H"
                     includeMargin={true}
                   />
                 </div>
-                
+
                 <p className="text-sm text-gray-600 mt-4 font-medium">
                   Mã QR cố định cho sự kiện
                 </p>
-                
+
                 <p className="text-xs text-green-600 mt-1">
                   ✅ Có hiệu lực trong suốt sự kiện
                 </p>
@@ -185,7 +331,17 @@ const QRDisplayPage = () => {
                 </Button>
               </div>
             ) : (
-              <p className="text-gray-500">Chưa có mã QR</p>
+              <div className="flex flex-col items-center py-4">
+                <p className="text-gray-500 mb-4">Chưa có mã QR cho sự kiện này</p>
+                <Button
+                  type="primary"
+                  size="large"
+                  icon={<ReloadOutlined />}
+                  onClick={handleRefreshQR}
+                >
+                  Tạo mã QR điểm danh
+                </Button>
+              </div>
             )}
           </div>
         </Card>
@@ -193,7 +349,7 @@ const QRDisplayPage = () => {
         {/* Statistics */}
         <Card className="lg:col-span-2">
           <h2 className="text-xl font-bold mb-4">Thống kê</h2>
-          
+
           <div className="grid grid-cols-3 gap-4">
             <Card>
               <Statistic

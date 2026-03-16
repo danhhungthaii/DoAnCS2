@@ -1,0 +1,167 @@
+/* ========================================
+   BADGE COMPONENT
+   ======================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-sans);
+  font-weight: var(--font-semibold);
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: var(--radius-full);
+  transition: var(--transition-colors);
+}
+
+/* ========================================
+   VARIANTS
+   ======================================== */
+
+.badge-default {
+  background: var(--surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--surface-border);
+}
+
+.badge-success {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.badge-warning {
+  background: var(--warning-bg);
+  color: var(--warning);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.badge-danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.badge-info {
+  background: var(--info-bg);
+  color: var(--info);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+/* ========================================
+   SIZES
+   ======================================== */
+
+.badge-sm {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+}
+
+.badge-md {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.badge-lg {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-base);
+}
+
+/* ========================================
+   ICON
+   ======================================== */
+
+.badge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-icon svg {
+  width: 1em;
+  height: 1em;
+}
+
+.badge-sm .badge-icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+.badge-md .badge-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.badge-lg .badge-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ========================================
+   DOT VARIANT (Status Indicator)
+   ======================================== */
+
+.badge-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.badge-dot-success {
+  background: var(--success);
+  box-shadow: 0 0 0 2px var(--success-bg);
+}
+
+.badge-dot-warning {
+  background: var(--warning);
+  box-shadow: 0 0 0 2px var(--warning-bg);
+}
+
+.badge-dot-danger {
+  background: var(--danger);
+  box-shadow: 0 0 0 2px var(--danger-bg);
+}
+
+.badge-dot-info {
+  background: var(--info);
+  box-shadow: 0 0 0 2px var(--info-bg);
+}
+
+.badge-dot-default {
+  background: var(--text-muted);
+  box-shadow: 0 0 0 2px var(--surface);
+}
+
+/* ========================================
+   HOVER STATES (for clickable badges)
+   ======================================== */
+
+.badge-clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.badge-clickable:hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
+}
+
+.badge-clickable:active {
+  transform: translateY(0);
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .badge-dot {
+    animation: none;
+  }
+  
+  .badge-clickable:hover {
+    transform: none;
+  }
+}

@@ -8,7 +8,6 @@ import {
   message,
   Space,
   Popconfirm,
-  Tag,
   Upload,
 } from 'antd';
 import {
@@ -133,9 +132,9 @@ const StudentsPage = () => {
       try {
         setUploading(true);
         const response = await studentService.importStudents(file);
-        
+
         const { successCount, failedCount, duplicateCount, details } = response.data;
-        
+
         Modal.info({
           title: 'Kết quả import',
           width: 600,
@@ -149,7 +148,7 @@ const StudentsPage = () => {
               {failedCount > 0 && (
                 <p style={{ color: 'red' }}><strong>Lỗi:</strong> {failedCount}</p>
               )}
-              
+
               {details.failed.length > 0 && (
                 <div style={{ marginTop: 16 }}>
                   <strong>Chi tiết lỗi:</strong>
@@ -164,7 +163,7 @@ const StudentsPage = () => {
             </div>
           ),
         });
-        
+
         fetchStudents(searchText);
         onSuccess();
       } catch (error) {
@@ -215,17 +214,6 @@ const StudentsPage = () => {
       width: 150,
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'isActive',
-      key: 'isActive',
-      width: 100,
-      render: (isActive) => (
-        <Tag color={isActive ? 'green' : 'red'}>
-          {isActive ? 'Hoạt động' : 'Ngưng'}
-        </Tag>
-      ),
-    },
-    {
       title: 'Thao tác',
       key: 'actions',
       fixed: 'right',
@@ -253,7 +241,7 @@ const StudentsPage = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Quản lý Sinh viên</h1>
+        <h1 className="text-2xl text-size-20px font-bold">Quản lý Sinh viên</h1>
         <Space>
           <Input.Search
             placeholder="Tìm theo mã SV, tên, email..."
@@ -298,7 +286,7 @@ const StudentsPage = () => {
         loading={loading}
         rowKey="_id"
         pagination={{ pageSize: 20 }}
-        scroll={{ x: 1200 }}
+        scroll={{ x: 1100 }}
       />
 
       <Modal

@@ -1,0 +1,264 @@
+/* ============================================
+   LoginPage — Dark Glassmorphism Styles
+   ============================================ */
+
+.login-dark {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(120deg, rgba(6, 18, 38, 0.84) 0%, rgba(8, 20, 42, 0.68) 45%, rgba(6, 18, 38, 0.82) 100%),
+        url('/images/dnc-building.jpg') center center / cover no-repeat fixed;
+}
+
+/* Ambient glows */
+.login-glow {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(120px);
+    z-index: 0;
+}
+
+.login-glow-1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.12), transparent 70%);
+    top: -150px;
+    right: -100px;
+}
+
+.login-glow-2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.08), transparent 70%);
+    bottom: -100px;
+    left: -100px;
+}
+
+.login-grid-pattern {
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.login-container {
+    display: flex;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Left — Branding */
+.login-brand-side {
+    flex: 1;
+    min-width: 0;
+}
+
+.login-brand-content {
+    max-width: 440px;
+    color: #f8fbff;
+}
+
+.login-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 48px;
+    text-decoration: none;
+}
+
+.login-logo-mark {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.login-logo-name {
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    color: #f8fbff;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+}
+
+.login-brand-hero h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+    color: #f8fbff;
+    text-shadow: 0 3px 24px rgba(0, 0, 0, 0.45);
+}
+
+.login-brand-hero p {
+    font-size: 1rem;
+    color: rgba(241, 248, 255, 0.92);
+    line-height: 1.7;
+    margin-bottom: 40px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+.login-brand-stats {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.login-stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-stat-val {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #eef6ff;
+}
+
+.login-stat-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: rgba(227, 239, 255, 0.88);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+}
+
+.login-stat-div {
+    width: 1px;
+    height: 32px;
+    background: var(--border);
+}
+
+/* Right — Form */
+.login-form-side {
+    flex: 0 0 400px;
+}
+
+.login-form-card {
+    padding: 40px 36px;
+    border-radius: 20px;
+    background: rgba(10, 24, 44, 0.84);
+    border: 1px solid rgba(148, 188, 255, 0.24);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 60px rgba(59, 130, 246, 0.05);
+}
+
+.login-form-header {
+    margin-bottom: 32px;
+}
+
+.login-form-header h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+    color: #f8fbff;
+}
+
+.login-form-header p {
+    font-size: 0.85rem;
+    color: rgba(227, 239, 255, 0.85);
+}
+
+.login-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(237, 246, 255, 0.96);
+}
+
+.login-input {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    color: var(--text-primary) !important;
+}
+
+.login-input:focus,
+.login-input:hover {
+    border-color: var(--blue) !important;
+}
+
+.login-submit-btn {
+    height: 48px !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
+    margin-top: 8px;
+}
+
+/* Back link */
+.login-back {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.login-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: rgba(233, 244, 255, 0.9);
+    transition: color 0.2s;
+}
+
+.login-back-link:hover {
+    color: var(--text-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .login-brand-side {
+        text-align: center;
+    }
+
+    .login-brand-content {
+        max-width: 100%;
+    }
+
+    .login-brand-hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .login-brand-stats {
+        justify-content: center;
+    }
+
+    .login-form-side {
+        flex: none;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .login-logo {
+        justify-content: center;
+    }
+}

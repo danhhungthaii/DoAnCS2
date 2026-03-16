@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base application theme -->
-    <style name="Base.Theme.AttendanceApp" parent="Theme.Material3.Light.NoActionBar">
+    <!-- Base application theme - Dark Glassmorphism Navy -->
+    <style name="Base.Theme.AttendanceApp" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Primary colors -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="colorPrimaryContainer">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/text_on_primary</item>
+
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorSecondaryContainer">@color/accent_dark</item>
+        <item name="colorOnSecondary">@color/background</item>
+
+        <!-- Accent -->
+        <item name="colorAccent">@color/primary</item>
+
+        <!-- Background colors — Deep navy -->
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorSurfaceVariant">@color/surface_light</item>
+
+        <!-- Status bar — deep navy -->
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:navigationBarColor">@color/background</item>
         <item name="android:windowBackground">@color/background</item>
+
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+
+        <!-- Input styling -->
+        <item name="boxStrokeColor">@color/input_stroke_focused</item>
+        <item name="hintTextColor">@color/text_secondary</item>
     </style>
 
     <style name="Theme.AttendanceApp" parent="Base.Theme.AttendanceApp" />
-    
+
     <!-- Alias for AndroidManifest compatibility -->
     <style name="Theme.AttendanceQR" parent="Theme.AttendanceApp" />
 
@@ -18,5 +44,35 @@
     <style name="Theme.AttendanceApp.Fullscreen" parent="Theme.AttendanceApp">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!-- Button style — Gradient blue -->
+    <style name="Widget.AttendanceApp.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:textColor">@color/text_on_primary</item>
+        <item name="backgroundTint">@color/primary</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <!-- Outlined button style -->
+    <style name="Widget.AttendanceApp.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/primary</item>
+        <item name="strokeColor">@color/primary</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <!-- Card style — Glass effect -->
+    <style name="Widget.AttendanceApp.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/surface</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/glass_border</item>
+    </style>
+
+    <!-- Bottom Navigation style -->
+    <style name="Widget.AttendanceApp.BottomNav" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@color/background_light</item>
+        <item name="itemIconTint">@color/nav_active</item>
+        <item name="itemTextColor">@color/nav_active</item>
     </style>
 </resources>

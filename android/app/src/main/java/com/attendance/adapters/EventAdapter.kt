@@ -10,9 +10,6 @@ import com.attendance.databinding.ItemEventBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * EventAdapter - RecyclerView Adapter cho danh sách sự kiện
- */
 class EventAdapter(
     private val onEventClick: (Event) -> Unit
 ) : ListAdapter<Event, EventAdapter.EventViewHolder>(EventDiffCallback()) {
@@ -38,35 +35,60 @@ class EventAdapter(
             binding.apply {
                 tvEventTitle.text = event.title
                 tvEventLocation.text = event.location.address
-                tvEventDate.text = formatDateTime(event.dateTime)
-                tvEventStatus.text = when (event.status) {
-                    "upcoming" -> "Sắp diễn ra"
-                    "ongoing" -> "Đang diễn ra"
-                    "completed" -> "Đã kết thúc"
-                    else -> event.status
-                }
-                
+                tvEventDate.text = formatDateTime(event.dateTime, event.endDateTime)
+
+                // Use computed status for real-time updates
+                tvEventStatus.text = event.getStatusText()
+
                 root.setOnClickListener {
                     onEventClick(event)
                 }
             }
         }
         
-        private fun formatDateTime(dateString: String): String {
+        private fun formatDateTime(startDateString: String, endDateString: String?): String {
             return try {
-                val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-                val outputFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                val date = inputFormat.parse(dateString)
-                outputFormat.format(date ?: Date())
+                val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+                inputFormat.timeZone = java.util.TimeZone.getTimeZone("UTC")
+                
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+                
+                val startDate = inputFormat.parse(startDateString)
+                if (startDate != null) {
+                    val formattedDate = dateFormat.format(startDate)
+                    val startTime = timeFormat.format(startDate)
+                    
+                    // Parse end time if available
+                    val endTime = if (!endDateString.isNullOrEmpty()) {
+                        try {
+                            val endDate = inputFormat.parse(endDateString)
+                            if (endDate != null) timeFormat.format(endDate) else ""
+                        } catch (e: Exception) {
+                            ""
+                        }
+                    } else {
+                        ""
+                    }
+                    
+                    // Format: "dd/MM/yyyy - HH:mm-HH:mm"
+                    if (endTime.isNotEmpty()) {
+                        "$formattedDate - $startTime-$endTime"
+                    } else {
+                        "$formattedDate - $startTime"
+                    }
+                } else {
+                    startDateString
+                }
             } catch (e: Exception) {
-                dateString
+                startDateString
             }
         }
     }
     
     class EventDiffCallback : DiffUtil.ItemCallback<Event>() {
         override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem._id == newItem._id
         }
         
         override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean {

@@ -15,3 +15,13 @@ coverage/
 
 # Claude Skills (local only)
 awesome-claude-skills-master/
+
+*.exe
+
+*.zip
+
+backend/debug.log
+
+backend/db_status.txt
+
+.vite/

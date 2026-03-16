@@ -50,6 +50,7 @@ exports.importStudents = async (req, res) => {
         const className = row['Lớp'] || row['class'];
         const major = row['Ngành'] || row['major'];
         const phoneNumber = row['Số điện thoại'] || row['phoneNumber'];
+        const password = row['Mật khẩu'] || row['password'] || '123456'; // Mặc định 123456
         const dateOfBirth = row['Ngày sinh'] || row['dateOfBirth'];
         const deviceId = row['Device ID'] || row['deviceId'];
         
@@ -82,15 +83,17 @@ exports.importStudents = async (req, res) => {
           continue;
         }
 
-        // Tạo sinh viên mới
+        // Tạo sinh viên mới với password
         const student = await Student.create({
           studentCode: studentCode.toString().trim(),
           fullName: fullName.toString().trim(),
           email: email.toString().trim(),
+          password: password.toString().trim(), // Password sẽ tự động hash trong pre-save
+          isFirstLogin: true, // Lần đầu login phải đổi mật khẩu
           class: className ? className.toString().trim() : undefined,
           major: major ? major.toString().trim() : undefined,
-          phoneNumber: phoneNumber ? phoneNumber.toString().trim() : undefined,
-          dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : undefined,
+          phone: phoneNumber ? phoneNumber.toString().trim() : undefined,
+          academicYear: dateOfBirth ? new Date(dateOfBirth).getFullYear().toString() : undefined,
           deviceId: deviceId ? deviceId.toString().trim() : undefined
         });
 
@@ -153,6 +156,7 @@ exports.downloadTemplate = async (req, res) => {
         'Mã sinh viên': 'SV001',
         'Họ và tên': 'Nguyễn Văn A',
         'Email': 'sva@student.edu.vn',
+        'Mật khẩu': '123456',
         'Lớp': 'CNTT-K44A',
         'Ngành': 'Công nghệ thông tin',
         'Số điện thoại': '0123456789',
@@ -163,6 +167,7 @@ exports.downloadTemplate = async (req, res) => {
         'Mã sinh viên': 'SV002',
         'Họ và tên': 'Trần Thị B',
         'Email': 'ttb@student.edu.vn',
+        'Mật khẩu': '123456',
         'Lớp': 'CNTT-K44B',
         'Ngành': 'Công nghệ thông tin',
         'Số điện thoại': '0987654321',
@@ -173,6 +178,7 @@ exports.downloadTemplate = async (req, res) => {
         'Mã sinh viên': 'SV003',
         'Họ và tên': 'Lê Văn C',
         'Email': 'lvc@student.edu.vn',
+        'Mật khẩu': '123456',
         'Lớp': 'KTPM-K44A',
         'Ngành': 'Kỹ thuật phần mềm',
         'Số điện thoại': '0912345678',
@@ -191,6 +197,7 @@ exports.downloadTemplate = async (req, res) => {
       { wch: 15 }, // Mã sinh viên
       { wch: 25 }, // Họ và tên
       { wch: 30 }, // Email
+      { wch: 12 }, // Mật khẩu
       { wch: 15 }, // Lớp
       { wch: 25 }, // Ngành
       { wch: 15 }, // Số điện thoại
